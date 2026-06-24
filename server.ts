@@ -3,6 +3,10 @@ import path from "path";
 import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
+import * as dotenv from "dotenv";
+
+// Load environment variables
+dotenv.config();
 
 // Define the DB path
 const DB_PATH = path.join(process.cwd(), "db.json");
@@ -123,7 +127,7 @@ const INITIAL_DB: DatabaseSchema = {
   ]
 };
 
-// Help helper to read and write database
+// Helper to read and write database
 function readDB(): DatabaseSchema {
   try {
     if (!fs.existsSync(DB_PATH)) {
@@ -132,16 +136,16 @@ function readDB(): DatabaseSchema {
     }
     const data = fs.readFileSync(DB_PATH, "utf8");
     const parsed = JSON.parse(data);
-    if (!parsed.subscriptions) {
-      parsed.subscriptions = INITIAL_DB.subscriptions;
-    }
-    if (!parsed.completedLessons) {
-      parsed.completedLessons = INITIAL_DB.completedLessons;
-    }
+    // Ensure all keys exist (safe migration)
+    if (!parsed.subscriptions) parsed.subscriptions = INITIAL_DB.subscriptions;
+    if (!parsed.completedLessons) parsed.completedLessons = INITIAL_DB.completedLessons;
+    if (!parsed.payments) parsed.payments = INITIAL_DB.payments;
+    if (!parsed.enquiries) parsed.enquiries = INITIAL_DB.enquiries;
+    if (!parsed.profile) parsed.profile = INITIAL_DB.profile;
     return parsed;
   } catch (err) {
     console.error("Error reading db file, falling back to initial default database structure.", err);
-    return INITIAL_DB;
+    return { ...INITIAL_DB };
   }
 }
 
@@ -155,18 +159,17 @@ function writeDB(data: DatabaseSchema) {
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
-  // Make sure we parse standard JSON payloads
   app.use(express.json());
 
-  // Ensure DB file exists and is populated
+  // Ensure DB file exists and is populated on startup
   readDB();
 
-  // --- API ROUTING FIRST ---
-  
+  // --- API ROUTES ---
+
   // 1. Portfolio data of Hemant Nilim Das
-  app.get("/api/portfolio", (req, res) => {
+  app.get("/api/portfolio", (_req, res) => {
     res.json({
       name: "Hemant Nilim Das",
       title: "Award-Winning Filmmaker & ScreenCraft Director",
@@ -192,7 +195,7 @@ async function startServer() {
           year: "2015",
           highlight: "India's first one-take uncut film across 40 locations",
           leadCast: "Vijay Raaz, Madhur Mittal, Madhurima Tuli",
-          youtubeId: "vBq72eF_u1A", // Placeholder index / actual video
+          youtubeId: "vBq72eF_u1A",
           description: "A highly acclaimed high-octane hostage thriller filmed in a single, continuous, sweeping camera movement that showcases unmatched blocking, tracking, and actor rehearsals."
         },
         {
@@ -200,7 +203,7 @@ async function startServer() {
           year: "2026",
           highlight: "Guerrilla-warfare action feature production",
           leadCast: "Student ADs & Regional Talents",
-          youtubeId: "dQw4w9WgXcQ", // Demo link
+          youtubeId: "dQw4w9WgXcQ",
           description: "An intensive guerrilla action-drama filmed alongside Filmfluencer Academy cohorts. Students act, assist, and claim IMDB credits directly on set."
         }
       ],
@@ -214,69 +217,27 @@ async function startServer() {
   });
 
   // 2. Courses content list
-  app.get("/api/courses", (req, res) => {
+  app.get("/api/courses", (_req, res) => {
     res.json([
       {
         id: "course_1",
         title: "Guerrilla Film Directing & Blocking",
         description: "Master the art of shooting premier cinematic content under extreme resource constraints with Hemant Nilim Das.",
         lessons: [
-          {
-            id: "lesson_1_1",
-            title: "Introduction to Guerrilla Cinematic Design",
-            duration: "18 mins",
-            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
-            summary: "Learn how to scout locations, define camera angles, and build a cohesive visual style without expensive studio lighting or big crews."
-          },
-          {
-            id: "lesson_1_2",
-            title: "Actor Staging and Multi-Location Blocking",
-            duration: "24 mins",
-            videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
-            summary: "Analyzing complex scene movements so that actors stay in focus and on mark in dynamic settings."
-          },
-          {
-            id: "lesson_1_3",
-            title: "One-Take Cinematic Masterclass (Pocket Gangsters Case Study)",
-            duration: "32 mins",
-            videoUrl: "https://www.w3schools.com/html/movie.mp4",
-            summary: "A deep dive into how we coordinated 40 distinct locations in a single unbroken take. Syncing audio, camera operators, and actors in absolute perfect harmony."
-          },
-          {
-            id: "lesson_1_4",
-            title: "Directing A-List Stars vs First-Time Actors",
-            duration: "15 mins",
-            videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
-            summary: "Psychological principles for guiding talent to deliver organic, raw emotional truth on screen."
-          }
+          { id: "lesson_1_1", title: "Introduction to Guerrilla Cinematic Design", duration: "18 mins", videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4", summary: "Learn how to scout locations, define camera angles, and build a cohesive visual style without expensive studio lighting or big crews." },
+          { id: "lesson_1_2", title: "Actor Staging and Multi-Location Blocking", duration: "24 mins", videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4", summary: "Analyzing complex scene movements so that actors stay in focus and on mark in dynamic settings." },
+          { id: "lesson_1_3", title: "One-Take Cinematic Masterclass (Pocket Gangsters Case Study)", duration: "32 mins", videoUrl: "https://www.w3schools.com/html/movie.mp4", summary: "A deep dive into how we coordinated 40 distinct locations in a single unbroken take. Syncing audio, camera operators, and actors in absolute perfect harmony." },
+          { id: "lesson_1_4", title: "Directing A-List Stars vs First-Time Actors", duration: "15 mins", videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4", summary: "Psychological principles for guiding talent to deliver organic, raw emotional truth on screen." }
         ]
       },
       {
         id: "course_2",
         title: "AI-Powered Pre-Production & Casting",
-        description: "Use cutting-edge Al generators to create industry-grade screenplay drafts, script edits, and high-fidelity pitch decks.",
+        description: "Use cutting-edge AI generators to create industry-grade screenplay drafts, script edits, and high-fidelity pitch decks.",
         lessons: [
-          {
-            id: "lesson_2_1",
-            title: "Pre-Production Pipeline in the Era of AI",
-            duration: "14 mins",
-            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
-            summary: "How modern Indian production companies integrate AI to speed up shot-lists, scripts, and production budget sheets."
-          },
-          {
-            id: "lesson_2_2",
-            title: "Generating Visual Storyboards and Screenplays",
-            duration: "21 mins",
-            videoUrl: "https://www.w3schools.com/html/movie.mp4",
-            summary: "Using tools to map scripts into comprehensive, gorgeous layout storyboards that win investor trust easily."
-          },
-          {
-            id: "lesson_2_3",
-            title: "Structuring and Pitching to OTT Streaming Platforms",
-            duration: "20 mins",
-            videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
-            summary: "The direct commercial checklist to pitch shows successfully to directors and content executives at Netflix, Disney+ Hotstar, and JioCinema."
-          }
+          { id: "lesson_2_1", title: "Pre-Production Pipeline in the Era of AI", duration: "14 mins", videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4", summary: "How modern Indian production companies integrate AI to speed up shot-lists, scripts, and production budget sheets." },
+          { id: "lesson_2_2", title: "Generating Visual Storyboards and Screenplays", duration: "21 mins", videoUrl: "https://www.w3schools.com/html/movie.mp4", summary: "Using tools to map scripts into comprehensive, gorgeous layout storyboards that win investor trust easily." },
+          { id: "lesson_2_3", title: "Structuring and Pitching to OTT Streaming Platforms", duration: "20 mins", videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4", summary: "The direct commercial checklist to pitch shows successfully to Netflix, Disney+ Hotstar, and JioCinema." }
         ]
       },
       {
@@ -284,33 +245,15 @@ async function startServer() {
         title: "Establishing Your Production Business Banner",
         description: "Learn how to set up your corporate film company, earn verified IMDB credits, and invoice clients professionally.",
         lessons: [
-          {
-            id: "lesson_3_1",
-            title: "Legally Incorporating Your Production Banner",
-            duration: "16 mins",
-            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
-            summary: "A step-by-step corporate guide to registering your independent movie production banner in India to accept payments and handle VAT/GST tags easily."
-          },
-          {
-            id: "lesson_3_2",
-            title: "Securing Verified IMDB Credits & Creative Contracts",
-            duration: "12 mins",
-            videoUrl: "https://www.w3schools.com/html/movie.mp4",
-            summary: "How credit registries operate, signing legal contracts with crew, and ensuring your name is officially recorded on IMDB databases."
-          },
-          {
-            id: "lesson_3_3",
-            title: "International Film Festivals and Distribution Rights",
-            duration: "19 mins",
-            videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
-            summary: "Navigating submission platforms, film markets (MIPCOM, Cannes Market), and negotiating theatrical vs. digital streaming distribution deals."
-          }
+          { id: "lesson_3_1", title: "Legally Incorporating Your Production Banner", duration: "16 mins", videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4", summary: "A step-by-step corporate guide to registering your independent movie production banner in India to accept payments and handle VAT/GST tags easily." },
+          { id: "lesson_3_2", title: "Securing Verified IMDB Credits & Creative Contracts", duration: "12 mins", videoUrl: "https://www.w3schools.com/html/movie.mp4", summary: "How credit registries operate, signing legal contracts with crew, and ensuring your name is officially recorded on IMDB databases." },
+          { id: "lesson_3_3", title: "International Film Festivals and Distribution Rights", duration: "19 mins", videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4", summary: "Navigating submission platforms, film markets (MIPCOM, Cannes Market), and negotiating theatrical vs. digital streaming distribution deals." }
         ]
       }
     ]);
   });
 
-  // 3. User Student Profile handler
+  // 3. Student Profile
   app.get("/api/profile", (req, res) => {
     const db = readDB();
     res.json(db.profile);
@@ -318,19 +261,13 @@ async function startServer() {
 
   app.post("/api/profile", (req, res) => {
     const db = readDB();
-    const updatedProfile = req.body;
-    
-    db.profile = {
-      ...db.profile,
-      ...updatedProfile
-    };
-    
+    db.profile = { ...db.profile, ...req.body };
     writeDB(db);
     res.json({ success: true, profile: db.profile });
   });
 
-  // 4. Enquiries Handler
-  app.get("/api/enquiries", (req, res) => {
+  // 4. Enquiries
+  app.get("/api/enquiries", (_req, res) => {
     const db = readDB();
     res.json(db.enquiries);
   });
@@ -356,31 +293,24 @@ async function startServer() {
 
     db.enquiries.unshift(newEnquiry);
     writeDB(db);
-
     res.json({ success: true, enquiry: newEnquiry });
   });
 
-  // Complete status indicator toggler
   app.patch("/api/enquiries/:id", (req, res) => {
     const db = readDB();
     const { id } = req.params;
     const { status } = req.body;
 
     const enq = db.enquiries.find(e => e.id === id);
-    if (!enq) {
-      return res.status(404).json({ error: "Enquiry not found" });
-    }
+    if (!enq) return res.status(404).json({ error: "Enquiry not found" });
 
-    if (status) {
-      enq.status = status;
-    }
-
+    if (status) enq.status = status;
     writeDB(db);
     res.json({ success: true, enquiry: enq });
   });
 
-  // 5. Payments handler
-  app.get("/api/payments", (req, res) => {
+  // 5. Payments
+  app.get("/api/payments", (_req, res) => {
     const db = readDB();
     res.json(db.payments);
   });
@@ -397,19 +327,18 @@ async function startServer() {
       id: "pay_" + Math.random().toString(36).substr(2, 9),
       amount: Number(amount),
       purpose,
-      status: "Completed", // Simulated instant success
+      status: "Completed",
       method: method || "Card / Razorpay Simulator",
       createdAt: new Date().toISOString()
     };
 
     db.payments.unshift(newPayment);
     writeDB(db);
-
     res.json({ success: true, payment: newPayment });
   });
 
-  // 5.5. Subscriptions handler
-  app.get("/api/subscriptions", (req, res) => {
+  // 5.5. Subscriptions
+  app.get("/api/subscriptions", (_req, res) => {
     const db = readDB();
     res.json(db.subscriptions || []);
   });
@@ -438,27 +367,19 @@ async function startServer() {
     if (!db.subscriptions) db.subscriptions = [];
     db.subscriptions.unshift(newSub);
     writeDB(db);
-
     res.json({ success: true, subscription: newSub });
   });
 
   app.post("/api/subscriptions/:id/toggle", (req, res) => {
     const db = readDB();
     const { id } = req.params;
-    const { status } = req.body; // e.g. "Active", "Paused", "Cancelled"
+    const { status } = req.body;
 
     if (!db.subscriptions) db.subscriptions = [];
     const sub = db.subscriptions.find(s => s.id === id);
-    if (!sub) {
-      return res.status(404).json({ error: "Subscription not found" });
-    }
+    if (!sub) return res.status(404).json({ error: "Subscription not found" });
 
-    if (status) {
-      sub.status = status;
-    } else {
-      sub.status = sub.status === "Active" ? "Paused" : "Active";
-    }
-
+    sub.status = status || (sub.status === "Active" ? "Paused" : "Active");
     writeDB(db);
     res.json({ success: true, subscription: sub });
   });
@@ -469,11 +390,8 @@ async function startServer() {
 
     if (!db.subscriptions) db.subscriptions = [];
     const sub = db.subscriptions.find(s => s.id === id);
-    if (!sub) {
-      return res.status(404).json({ error: "Subscription not found" });
-    }
+    if (!sub) return res.status(404).json({ error: "Subscription not found" });
 
-    // Create automated debit payment logs
     const newPayment: Payment = {
       id: "pay_" + Math.random().toString(36).substr(2, 9),
       amount: sub.amount,
@@ -485,7 +403,6 @@ async function startServer() {
 
     db.payments.unshift(newPayment);
 
-    // Roll billing date forward
     const nextDate = new Date(sub.nextBillingDate || new Date());
     nextDate.setMonth(nextDate.getMonth() + (sub.interval === "quarterly" ? 3 : 1));
     sub.nextBillingDate = nextDate.toISOString();
@@ -494,8 +411,8 @@ async function startServer() {
     res.json({ success: true, subscription: sub, payment: newPayment });
   });
 
-  // 6. Lesson Streaming Progress handler
-  app.get("/api/progress", (req, res) => {
+  // 6. Lesson Progress
+  app.get("/api/progress", (_req, res) => {
     const db = readDB();
     res.json(db.completedLessons);
   });
@@ -504,16 +421,12 @@ async function startServer() {
     const db = readDB();
     const { lessonId } = req.body;
 
-    if (!lessonId) {
-      return res.status(400).json({ error: "No lesson key specified" });
-    }
+    if (!lessonId) return res.status(400).json({ error: "No lesson key specified" });
 
     const index = db.completedLessons.indexOf(lessonId);
     if (index > -1) {
-      // Remove it (toggle off)
       db.completedLessons.splice(index, 1);
     } else {
-      // Add it (toggle completed)
       db.completedLessons.push(lessonId);
     }
 
@@ -521,17 +434,19 @@ async function startServer() {
     res.json({ success: true, completedLessons: db.completedLessons });
   });
 
-  // 7. Analyze student artistic capacity (Challenge the selection process)
+  // 7. AI Artistic Capacity Assessment (Gemini)
   app.post("/api/analyze-artistic-capacity", async (req, res) => {
     const { name, interest, answers } = req.body;
+
     if (!name || !interest || !answers) {
       return res.status(400).json({ error: "Missing required assessment parameters" });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
+
+    // Graceful fallback if no Gemini key
     if (!apiKey) {
-      // Graceful fallback if no key is supplied
-      const mockScore = Math.floor(Math.random() * 16) + 80; // 80 - 95
+      const mockScore = Math.floor(Math.random() * 16) + 80;
       let mockTier = "ELITE DIRECTING POTENTIAL (APPROVED)";
       if (interest === "Cinematography") mockTier = "GOLD COMPOSITION STANDARDS (APPROVED)";
       if (interest === "Screenwriting") mockTier = "HIGH FI-DRAFT PLOTTING STANDARDS (APPROVED)";
@@ -539,8 +454,8 @@ async function startServer() {
       return res.json({
         score: mockScore,
         tier: mockTier,
-        critique: `CRITIQUE: Exceptional spatial awareness and directorial control. Your night lighting solution shows active understanding of practical sources and cinematic contrast. Your response to the actor dispute demonstrates firm set management while keeping creative channels open. Your screen narrative opens with rich, cinematic visual metaphors. Highly recommended for immediate enrollment in the upcoming physical cohort.`,
-        recommendation: `Admitted with High Merit Scholarship options up to ₹15,000 for standard seat bookings.`,
+        critique: "CRITIQUE: Exceptional spatial awareness and directorial control. Your night lighting solution shows active understanding of practical sources and cinematic contrast. Your response to the actor dispute demonstrates firm set management while keeping creative channels open. Highly recommended for immediate enrollment.",
+        recommendation: "Admitted with High Merit Scholarship options up to ₹15,000 for standard seat bookings.",
         admissionId: "FFA-ADM-" + Math.random().toString(36).substr(2, 9).toUpperCase()
       });
     }
@@ -550,32 +465,31 @@ async function startServer() {
       const prompt = `
         You are Hemant Nilim Das, Director of Filmfluencer Academy in Mumbai.
         Grade a student's answers to the Artistic Admissions Challenge.
-        
+
         Track: ${interest}
         Student Name: ${name}
-        
+
         Answers:
         1. Cinematography Solution: ${answers.q1}
         2. Set Crisis Leadership: ${answers.q2}
         3. Visual Screenplay Opening: ${answers.q3}
-        
+
         Provide your response in JSON format matching this schema:
         {
-          "score": number (between 70 and 100 based on their creativity and cinematic quality),
-          "tier": "string (e.g., 'ELITE DIRECTING POTENTIAL' or 'CINEMATIC COMPOSITION MASTERY')",
-          "critique": "string (3-4 sentences of direct, encouraging but expert feedback in the style of Director Hemant Nilim Das)",
+          "score": number (between 70 and 100),
+          "tier": "string (e.g., 'ELITE DIRECTING POTENTIAL')",
+          "critique": "string (3-4 sentences of direct, encouraging expert feedback)",
           "recommendation": "string (a 1-sentence recommendation or scholarship status)",
           "admissionId": "string (a unique code matching 'FFA-ADM-XXXXXX')"
         }
-        Do not return any markdown codeblocks or outer text, only the raw JSON.
+        Return only raw JSON. No markdown. No extra text.
       `;
 
+      // BUG FIX: correct model name (gemini-3.5-flash does not exist — use gemini-1.5-flash)
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-1.5-flash",
         contents: prompt,
-        config: {
-          responseMimeType: "application/json"
-        }
+        config: { responseMimeType: "application/json" }
       });
 
       const parsed = JSON.parse(response.text || "{}");
@@ -587,19 +501,19 @@ async function startServer() {
         admissionId: parsed.admissionId || "FFA-ADM-" + Math.random().toString(36).substr(2, 9).toUpperCase()
       });
     } catch (err) {
-      console.error("Gemini API error, falling back to smart defaults:", err);
+      console.error("Gemini API error:", err);
       const mockScore = Math.floor(Math.random() * 15) + 80;
       res.json({
         score: mockScore,
         tier: "CREATIVE APTITUDE STANDARDS (APPROVED)",
-        critique: `Your responses demonstrate solid artistic potential. Your spatial composition and lighting strategies align well with our hands-on curriculum guidelines at the Andheri soundstage.`,
+        critique: "Your responses demonstrate solid artistic potential. Your spatial composition and lighting strategies align well with our hands-on curriculum guidelines.",
         recommendation: "Approved for direct cohort registration.",
         admissionId: "FFA-ADM-" + Math.random().toString(36).substr(2, 9).toUpperCase()
       });
     }
   });
 
-  // --- VITE DEV MIDDLEWARE AND STATIC PRODUCTION ASSETS ---
+  // --- VITE DEV / STATIC PRODUCTION ---
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -609,13 +523,13 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
-    app.get("*", (req, res) => {
+    app.get("*", (_req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`[Filmfluencer Academy] Server running securely on http://0.0.0.0:${PORT}`);
+    console.log(`[Filmfluencer Academy] Server running on http://0.0.0.0:${PORT}`);
   });
 }
 
