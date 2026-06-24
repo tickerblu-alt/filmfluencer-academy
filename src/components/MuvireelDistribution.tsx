@@ -1,0 +1,292 @@
+import React, { useState } from "react";
+import { Smartphone, Play, Shield, Ticket, Star, Radio, Flame, Eye, Heart, Sparkles, ChevronRight, Volume2 } from "lucide-react";
+
+interface ScreeningTape {
+  id: string;
+  title: string;
+  director: string;
+  duration: string;
+  description: string;
+  tags: string[];
+  views: string;
+  likes: string;
+  bitrate: string;
+  imageUrl: string;
+}
+
+export default function MuvireelDistribution() {
+  const tapes: ScreeningTape[] = [
+    {
+      id: "varanasi_neon",
+      title: "Varanasi Neon",
+      director: "Kabir Mehta",
+      duration: "4m 12s",
+      description: "An exploration of ancient mystical spiritual ghats under modern ultraviolet lights and hyper-stylized frame rates.",
+      tags: ["#A7SIII", "#Anamorphic", "#DaVinci Color"],
+      views: "2.4M",
+      likes: "420K",
+      bitrate: "128kbps",
+      imageUrl: "https://images.unsplash.com/photo-1561361531-99522c3a0214?auto=format&fit=crop&q=80&w=400&h=600"
+    },
+    {
+      id: "the_auto_driver",
+      title: "The Auto Driver",
+      director: "Priya Rao",
+      duration: "5m 45s",
+      description: "A fast-paced psychological profile of a night driver maneuvering the high-contrast underbelly of modern Mumbai.",
+      tags: ["#FX6", "#Gimbal", "#Atmos Sound"],
+      views: "1.8M",
+      likes: "310K",
+      bitrate: "128kbps",
+      imageUrl: "https://images.unsplash.com/photo-1549880181-56a44cf4a9a1?auto=format&fit=crop&q=80&w=400&h=600"
+    },
+    {
+      id: "bengaluru_cyberpunk",
+      title: "Bengaluru Cyberpunk",
+      director: "Rohit Krish",
+      duration: "3m 30s",
+      description: "Atmospheric, hyper-saturated neon frames capturing late night tech workers seeking human connection.",
+      tags: ["#RED Komodo", "#Prime Lens", "#Cyber"],
+      views: "3.1M",
+      likes: "590K",
+      bitrate: "256kbps",
+      imageUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&q=80&w=400&h=600"
+    },
+    {
+      id: "himalayan_breath",
+      title: "Himalayan Breath",
+      director: "Ananya Dev",
+      duration: "6m 10s",
+      description: "An evocative cinematic diary documenting breathing rituals at high altitudinal monasteries under golden hours.",
+      tags: ["#DJI Ronin", "#Natural Light", "#Spiritual"],
+      views: "1.2M",
+      likes: "240K",
+      bitrate: "320kbps",
+      imageUrl: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=400&h=600"
+    }
+  ];
+
+  const [activeTapeIdx, setActiveTapeIdx] = useState(0);
+  const currentTape = tapes[activeTapeIdx];
+
+  const handleNextTape = () => {
+    setActiveTapeIdx((prev) => (prev + 1) % tapes.length);
+  };
+
+  return (
+    <section id="muvireel" className="py-24 px-6 max-w-7xl mx-auto border-b border-neutral-900 bg-black relative">
+      {/* Visual background lights */}
+      <div className="absolute top-10 right-10 w-80 h-80 bg-red-600/[0.03] rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-80 h-80 bg-amber-500/[0.03] rounded-full blur-3xl pointer-events-none" />
+      
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        {/* LEFT COLUMN: MUVIREEL PITCH */}
+        <div className="lg:col-span-7 space-y-8">
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+              <span className="text-[10px] font-mono text-red-400 font-bold uppercase tracking-widest">
+                UPCOMING DISTRIBUTION NET
+              </span>
+            </div>
+            
+            <h3 className="text-3xl sm:text-5xl font-extrabold font-display text-white tracking-tight leading-[1.15]">
+              Meet MUVIREEL.<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-400 to-amber-400">
+                The Theatre In Your Hand.
+              </span>
+            </h3>
+
+            <p className="text-sm sm:text-base text-neutral-300 leading-relaxed font-sans pt-2">
+              Traditional social algorithms treat 5-star short films and basic viral comedy reels the same way. <strong className="text-white">MUVIREEL is different</strong>. Built specifically for Film Fluencers, MUVIREEL is a highly curated streaming app that feeds vertical-locked docus, micro-narratives, and cinematic concepts to dedicated film fans.
+            </p>
+          </div>
+
+          {/* Core App Pillars */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+            <div className="p-5 bg-neutral-900/60 border border-neutral-850 rounded-2xl flex gap-3.5">
+              <Shield className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="text-sm font-bold text-white mb-1">No Gatekeepers</h4>
+                <p className="text-xs text-neutral-400 leading-relaxed">Publish directly to our secure streaming gateway.</p>
+              </div>
+            </div>
+
+            <div className="p-5 bg-neutral-900/60 border border-neutral-850 rounded-2xl flex gap-3.5">
+              <Ticket className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="text-sm font-bold text-white mb-1">Premium Ticketing</h4>
+                <p className="text-xs text-neutral-400 leading-relaxed">Gate exclusive releases behind digital admissions.</p>
+              </div>
+            </div>
+
+            <div className="p-5 bg-neutral-900/60 border border-neutral-850 rounded-2xl flex gap-3.5">
+              <Star className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="text-sm font-bold text-white mb-1">Stunning Bitrate Support</h4>
+                <p className="text-xs text-neutral-400 leading-relaxed">4K HDR playback tailored to preserve cinematic color grading.</p>
+              </div>
+            </div>
+
+            <div className="p-5 bg-neutral-900/60 border border-neutral-850 rounded-2xl flex gap-3.5">
+              <Radio className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="text-sm font-bold text-white mb-1">Graduation Broadcast</h4>
+                <p className="text-xs text-neutral-400 leading-relaxed">App cohorts get guaranteed front-page feature status.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-5 bg-gradient-to-r from-red-950/20 to-amber-950/15 border border-red-500/20 rounded-2xl">
+            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans">
+              <strong>MUVIREEL Beta v1.4</strong> is exclusive to FFA Students. Our next cohort gets access to release up to three films with standard monetization features active.
+            </p>
+          </div>
+        </div>
+
+
+        {/* RIGHT COLUMN: INTERACTIVE PHONE PREVIEW */}
+        <div className="lg:col-span-5 flex flex-col items-center">
+          
+          {/* Phone Shell frame */}
+          <div className="w-[320px] h-[580px] rounded-[40px] bg-[#0c0c0d] border-[8px] border-neutral-800 shadow-2xl relative overflow-hidden flex flex-col justify-between">
+            
+            {/* Camera notch */}
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 w-32 h-4 bg-black rounded-full z-30 flex items-center justify-center">
+              <span className="w-2.5 h-2.5 rounded-full bg-neutral-900 border border-neutral-800 mr-2" />
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-900" />
+            </div>
+
+            {/* Custom active screen content */}
+            <div className="absolute inset-0 z-10 overflow-hidden flex flex-col justify-between p-5 pt-8 bg-gradient-to-b from-black/80 via-black/40 to-black/90">
+              
+              {/* Dynamic visual overlay background simulating the movie frame */}
+              <div 
+                className="absolute inset-0 -z-10 bg-cover bg-center transition-all duration-700 opacity-60"
+                style={{ backgroundImage: `url(${currentTape.imageUrl})` }}
+              />
+              
+              {/* Stream Type indicator top */}
+              <div className="flex justify-between items-center text-white">
+                <span className="text-[9px] font-mono font-bold uppercase px-2.5 py-1 rounded-full bg-red-600 border border-red-500/40 tracking-wider">
+                  MUVIREELBETA
+                </span>
+                <span className="text-[10px] font-mono text-neutral-300 bg-black/60 px-2 py-0.5 rounded flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Stream: Ultra
+                </span>
+              </div>
+
+              {/* Middle Play Button simulation */}
+              <div className="my-auto flex flex-col items-center justify-center">
+                <button 
+                  onClick={handleNextTape}
+                  className="w-14 h-14 rounded-full bg-white/15 backdrop-blur-md border border-white/30 text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-lg group-hover:bg-white/20"
+                >
+                  <Play className="w-6 h-6 fill-current text-white translate-x-0.5" />
+                </button>
+                <span className="text-[10px] font-mono text-white/80 uppercase tracking-widest mt-3 bg-black/40 px-3 py-1 rounded-full border border-white/10">
+                  Tap to Play
+                </span>
+              </div>
+
+              {/* Bottom Stream Details Overlay */}
+              <div className="space-y-3.5 bg-black/70 p-4 rounded-2xl border border-neutral-800/60 backdrop-blur-sm">
+                <div>
+                  <span className="text-[8px] font-mono tracking-widest text-red-400 uppercase font-bold block mb-0.5">
+                    Cinematic Docu-Fiction
+                  </span>
+                  <div className="flex justify-between items-baseline">
+                    <h4 className="text-base font-extrabold text-white leading-tight font-display">
+                      {currentTape.title}
+                    </h4>
+                    <span className="text-[10px] font-mono text-neutral-400 shrink-0">
+                      {currentTape.duration}
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-[11px] text-neutral-300 font-sans leading-relaxed line-clamp-2">
+                  {currentTape.description}
+                </p>
+
+                {/* Technical camera badges */}
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {currentTape.tags.map((tag, idx) => (
+                    <span key={idx} className="px-2 py-0.5 bg-neutral-900/80 text-[9px] font-mono text-amber-400 rounded border border-neutral-800">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Stats indicators */}
+                <div className="flex items-center justify-between border-t border-neutral-900 pt-2 text-[10px] font-mono text-neutral-400">
+                  <span className="flex items-center gap-1">
+                    <Eye className="w-3.5 h-3.5 text-neutral-500" /> {currentTape.views} views
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Heart className="w-3.5 h-3.5 text-red-500" /> {currentTape.likes} likes
+                  </span>
+                  <span className="flex items-center gap-1 text-[9px] text-neutral-500">
+                    <Volume2 className="w-3 h-3" /> {currentTape.bitrate}
+                  </span>
+                </div>
+
+                {/* Director Badge */}
+                <div className="border-t border-neutral-900 pt-2 flex items-center justify-between">
+                  <div>
+                    <p className="text-[9px] text-neutral-500 font-mono uppercase">Director / Creator</p>
+                    <p className="text-xs font-bold text-white">{currentTape.director}</p>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[9px] font-mono uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-bold">
+                      FFA Fellow
+                    </span>
+                    <span className="text-[8px] font-mono text-emerald-400 block mt-0.5">Live Tip Active</span>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* Selector swipe instructions and tapes tabs */}
+          <div className="mt-6 w-[320px] text-center space-y-3">
+            <button 
+              onClick={handleNextTape}
+              className="w-full py-2.5 px-4 bg-neutral-900 border border-neutral-800 hover:border-red-500/30 rounded-xl text-xs font-mono text-neutral-300 flex items-center justify-center gap-2 transition-all cursor-pointer hover:text-white"
+            >
+              <span>SELECT SCREENING TAPE:</span>
+              <span className="text-red-400 font-bold flex items-center gap-1">
+                Swipe right <ChevronRight className="w-3.5 h-3.5" />
+              </span>
+            </button>
+
+            {/* Micro selection bullet points for tape titles */}
+            <div className="flex justify-center gap-1.5">
+              {tapes.map((tape, idx) => (
+                <button
+                  key={tape.id}
+                  onClick={() => setActiveTapeIdx(idx)}
+                  className={`w-2.5 h-2.5 rounded-full transition-all ${
+                    activeTapeIdx === idx ? "bg-red-500 scale-110" : "bg-neutral-800"
+                  }`}
+                  title={tape.title}
+                />
+              ))}
+            </div>
+
+            <div className="text-[10px] font-mono text-neutral-500">
+              Active tape: <span className="text-neutral-300">{currentTape.title}</span> by {currentTape.director}
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  );
+}

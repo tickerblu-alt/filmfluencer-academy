@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import LandingPage from "./components/LandingPage";
 import Dashboard from "./components/Dashboard";
-import { Course, Enquiry, Payment, Profile, PortfolioData, Subscription } from "./types";
+import AuthModal from "./components/AuthModal";
+import FirebaseTaggingModal from "./components/FirebaseTaggingModal";
+import { logActivity } from "./lib/firestoreService";
+import { Course, Enquiry, Payment, Profile, PortfolioData, Subscription, FFAUser, MediaAsset } from "./types";
 import { 
   Tv, 
   Sparkles, 
@@ -20,6 +23,14 @@ export default function App() {
   // "home" | "dashboard"
   const [currentView, setCurrentView] = useState<"home" | "dashboard">("home");
   const [dashboardTab, setDashboardTab] = useState<string>("lessons");
+
+  // Authentication State
+  const [currentUser, setCurrentUser] = useState<FFAUser | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // Firestore tagging modal state
+  const [isTaggingModalOpen, setIsTaggingModalOpen] = useState(false);
+  const [selectedTaggingAsset, setSelectedTaggingAsset] = useState<MediaAsset | null>(null);
 
   // Endpoint loaded states
   const [portfolio, setPortfolio] = useState<PortfolioData | null>(null);
@@ -328,6 +339,9 @@ export default function App() {
 
   // Administrative callback statuses
   const handleUpdateEnquiryStatus = async (id: string, status: string) => {
+    const targetEnq = enquiries.find(e => e.id === id);
+    const nameLabel = targetEnq ? `for ${targetEnq.name}` : `ID: ${id}`;
+    
     try {
       const res = await fetch(`/api/enquiries/${id}`, {
         method: "PATCH",
@@ -339,10 +353,26 @@ export default function App() {
         // update local list
         setEnquiries(prev => prev.map(e => e.id === id ? { ...e, status: status as any } : e));
         showToast(`Enquiry state changed to ${status}`, "success");
+        
+        // Log activity
+        await logActivity({
+          actionType: "update_enquiry",
+          adminName: currentUser?.name || "Director Das",
+          adminEmail: currentUser?.email || "hemant@muvireel.in",
+          details: `Updated admissions enquiry status ${nameLabel} to '${status}'.`
+        });
       }
     } catch (err) {
       setEnquiries(prev => prev.map(e => e.id === id ? { ...e, status: status as any } : e));
       showToast(`State updated locally to ${status}`, "success");
+      
+      // Log activity
+      await logActivity({
+        actionType: "update_enquiry",
+        adminName: currentUser?.name || "Director Das",
+        adminEmail: currentUser?.email || "hemant@muvireel.in",
+        details: `Updated admissions enquiry status ${nameLabel} locally to '${status}'.`
+      });
     }
   };
 
@@ -392,6 +422,17 @@ export default function App() {
           onTriggerPayment={handleTriggerPayment}
           onCreateSubscription={handleCreateSubscription}
           onNavigateToDashboard={handleNavigateToDashboard}
+          isAdminPowerActive={currentUser?.role === "admin"}
+          currentUser={currentUser}
+          onTriggerAuth={() => setIsAuthModalOpen(true)}
+          onSignOut={() => {
+            setCurrentUser(null);
+            showToast("Successfully signed out of secure session.", "info");
+          }}
+          onEditAsset={(asset) => {
+            setSelectedTaggingAsset(asset);
+            setIsTaggingModalOpen(true);
+          }}
         />
       ) : (
         <Dashboard 
@@ -411,6 +452,37 @@ export default function App() {
           onTriggerSubscriptionDebit={handleTriggerSubscriptionDebit}
           onUpdateEnquiryStatus={handleUpdateEnquiryStatus}
           onBackToLanding={() => setCurrentView("home")}
+          isAdminPowerActive={currentUser?.role === "admin"}
+          currentUser={currentUser}
+        />
+      )}
+
+      {/* MODAL LIGHTBOXES */}
+      {isAuthModalOpen && (
+        <AuthModal 
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          onAuthSuccess={(user) => {
+            setCurrentUser(user);
+            setIsAuthModalOpen(false);
+            showToast(`Welcome back, ${user.name}! ${user.role === "admin" ? "Administrative Power enabled." : "Student Portal active."}`, "success");
+          }}
+        />
+      )}
+
+      {isTaggingModalOpen && selectedTaggingAsset && (
+        <FirebaseTaggingModal 
+          isOpen={isTaggingModalOpen}
+          onClose={() => {
+            setIsTaggingModalOpen(false);
+            setSelectedTaggingAsset(null);
+          }}
+          asset={selectedTaggingAsset}
+          onSave={(id, updates) => {
+            showToast("Asset properties synchronized directly to Google Firestore!", "success");
+            setIsTaggingModalOpen(false);
+            setSelectedTaggingAsset(null);
+          }}
         />
       )}
 

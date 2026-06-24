@@ -1,0 +1,150 @@
+{
+  "entities": {
+    "MediaAsset": {
+      "title": "MediaAsset",
+      "description": "Cinema blockings and layouts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "url": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "taggedTrack": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "url", "title", "description", "category", "createdAt"]
+    },
+    "AcademicCalendarEvent": {
+      "title": "AcademicCalendarEvent",
+      "description": "Scheduled events and milestones",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "date": { "type": "string" },
+        "description": { "type": "string" },
+        "type": { "type": "string" }
+      },
+      "required": ["id", "title", "date", "description", "type"]
+    },
+    "StudyCohort": {
+      "title": "StudyCohort",
+      "description": "Active student cohorts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "track": { "type": "string" },
+        "startDate": { "type": "string" },
+        "activeStudentsCount": { "type": "integer" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "name", "track", "startDate", "activeStudentsCount", "status"]
+    },
+    "PvtLtdEntity": {
+      "title": "PvtLtdEntity",
+      "description": "Joint Private Limited company structures",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "student1Name": { "type": "string" },
+        "student2Name": { "type": "string" },
+        "status": { "type": "string" },
+        "gstNumber": { "type": "string" },
+        "incorporatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "student1Name", "student2Name", "status", "incorporatedAt"]
+    },
+    "FFANotification": {
+      "title": "FFANotification",
+      "description": "Administrative student alerts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentName": { "type": "string" },
+        "type": { "type": "string" },
+        "message": { "type": "string" },
+        "amount": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "sentByAdmin": { "type": "boolean" }
+      },
+      "required": ["id", "studentName", "type", "message", "createdAt", "sentByAdmin"]
+    },
+    "FFAUser": {
+      "title": "FFAUser",
+      "description": "Registered students and administrators",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "phone": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "role", "createdAt"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Online film learning courses",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "lessons": { "type": "array" }
+      },
+      "required": ["id", "title", "description", "lessons"]
+    },
+    "FFAActivityLog": {
+      "title": "FFAActivityLog",
+      "description": "Administrative audit activities log",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "actionType": { "type": "string" },
+        "adminName": { "type": "string" },
+        "adminEmail": { "type": "string" },
+        "details": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "actionType", "adminName", "adminEmail", "details", "createdAt"]
+    }
+  },
+  "firestore": {
+    "ffa_media": {
+      "schema": "MediaAsset",
+      "description": "Storage for tagged media blockings and masterclasses"
+    },
+    "ffa_calendar": {
+      "schema": "AcademicCalendarEvent",
+      "description": "Shared calendar entries"
+    },
+    "ffa_cohorts": {
+      "schema": "StudyCohort",
+      "description": "Cinema track study groups"
+    },
+    "ffa_pvt_ltd": {
+      "schema": "PvtLtdEntity",
+      "description": "Joint Private Limited production company structures"
+    },
+    "ffa_notifications": {
+      "schema": "FFANotification",
+      "description": "Student notification feed"
+    },
+    "ffa_users": {
+      "schema": "FFAUser",
+      "description": "Registered credentials and roles"
+    },
+    "ffa_online_courses": {
+      "schema": "Course",
+      "description": "Active learning curriculums"
+    },
+    "ffa_activity_logs": {
+      "schema": "FFAActivityLog",
+      "description": "Security ledger for admin activity audits"
+    }
+  }
+}

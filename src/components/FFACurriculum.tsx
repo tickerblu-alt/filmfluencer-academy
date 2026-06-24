@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Play, BookOpen, Clock, ArrowRight, Sparkles, CheckCircle, Flame, Tv } from "lucide-react";
+import React from "react";
+import { BookOpen, Calendar, Rocket, Target, Film, DollarSign, ArrowRight } from "lucide-react";
 import { Course } from "../types";
 
 interface FFACurriculumProps {
@@ -7,238 +7,234 @@ interface FFACurriculumProps {
   onNavigateToDashboard: (initialTab?: string) => void;
 }
 
-export default function FFACurriculum({ courses, onNavigateToDashboard }: FFACurriculumProps) {
-  const [activeStage, setActiveStage] = useState<number>(0);
-  const [selectedLesson, setSelectedLesson] = useState<{title: string, summary: string, duration: string} | null>(null);
-
-  // If courses are not loaded yet, show helper fallback
-  if (!courses || courses.length === 0) {
-    return (
-      <section id="curriculum" className="py-24 px-6 max-w-7xl mx-auto border-b border-neutral-900 bg-neutral-950 text-center">
-        <p className="text-neutral-400">Loading FFA syllabus...</p>
-      </section>
-    );
-  }
-
-  const stageTags = [
-    "IDEATION & PITCHING",
-    "ON-SET CRITICAL BLOCKING",
-    "LEGAL BUSINESS & OTT RIGHTS"
-  ];
-
+export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumProps) {
   return (
-    <section id="curriculum" className="py-24 px-6 max-w-7xl mx-auto border-b border-neutral-900 bg-gradient-to-b from-[#0b0b0c] via-[#09090a] to-[#0b0b0c] relative overflow-hidden">
-      {/* Background Ornaments */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-500/[0.015] rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-amber-500/[0.015] rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.01] pointer-events-none" />
-
-      {/* Elegant Header Block */}
+    <section id="curriculum" className="py-24 px-6 max-w-7xl mx-auto border-b border-neutral-900 bg-gradient-to-b from-[#0b0b0c] via-[#0d0d0f] to-[#0b0b0c] relative overflow-hidden">
+      {/* Background radial highlight */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/[0.02] rounded-full blur-3xl pointer-events-none" />
+      
+      {/* SECTION HEADER */}
       <div className="text-center max-w-4xl mx-auto mb-16 relative">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full mb-4">
           <BookOpen className="w-3.5 h-3.5 text-amber-400" />
           <span className="text-[10px] font-mono text-amber-300 uppercase tracking-widest font-bold">
-            FILMFLUENCER ACADEMY (FFA) SYLLABUS
+            THE FILMFLUENCERS ACADEMY (FFA)
           </span>
         </div>
 
-        {/* Dynamic typography combining Cormorant Garamond serif with Space Grotesk/Inter */}
-        <h3 className="text-4xl sm:text-5xl md:text-6xl font-normal font-serif text-white tracking-tight leading-[1.1] mb-6">
-          Full 3-Stage Curriculum
+        <h3 className="text-3xl sm:text-5xl font-bold font-display text-white tracking-tight leading-tight mb-4">
+          One Course. Two Skills.<br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">
+            The Path to Directing Your Own Hindi Films.
+          </span>
         </h3>
 
-        <div className="w-16 h-[1px] bg-amber-500/50 mx-auto mb-6" />
-
-        <p className="text-neutral-300 max-w-2xl mx-auto text-base sm:text-lg font-serif italic leading-relaxed text-transparent bg-clip-text bg-gradient-to-r from-neutral-200 via-neutral-100 to-neutral-400">
-          We teach the high-conversion directorship pipeline from initial seed scripts up to physical movie distributor handovers.
+        <p className="text-neutral-400 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed font-sans mt-4">
+          Film schools will trap you in a classroom for years, teaching you how to hold a camera while you wait for a break that never comes. We don&apos;t do that.
+        </p>
+        <p className="text-neutral-300 max-w-3xl mx-auto text-base font-semibold leading-relaxed font-sans mt-4 bg-neutral-900/50 border border-neutral-800 p-4 rounded-xl">
+          At FFA, you aren&apos;t a student; you are a filmmaker and a founder. We teach you how to direct, how to manage a budget, and how to get your films in front of an audience. No silos, no waiting, no &quot;academic&quot; nonsense. Just pure execution.
         </p>
       </div>
 
-      {/* Interactive Stage Selectors */}
-      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-2.5 p-1.5 bg-neutral-900/60 rounded-2xl border border-neutral-800/80 mb-12">
-        {courses.map((course, idx) => {
-          const isActive = activeStage === idx;
-          return (
-            <button
-              key={course.id}
-              onClick={() => {
-                setActiveStage(idx);
-                setSelectedLesson(null);
-              }}
-              className={`py-3.5 px-4 rounded-xl transition-all duration-300 text-left font-sans cursor-pointer group relative overflow-hidden ${
-                isActive
-                  ? "bg-gradient-to-r from-[#1c1917] to-neutral-900 border border-amber-500/40 text-white shadow-xl shadow-amber-500/[0.03]"
-                  : "text-neutral-400 hover:text-white hover:bg-neutral-900/30 border border-transparent"
-              }`}
-            >
-              {isActive && (
-                <div className="absolute top-0 right-0 w-12 h-12 bg-amber-500/[0.02] rounded-full blur-xl" />
-              )}
-              <div className="flex items-center gap-2.5">
-                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
-                  isActive ? "bg-amber-500 text-black" : "bg-neutral-950 text-neutral-500"
-                }`}>
-                  STAGE 0{idx + 1}
-                </span>
-                <span className="text-[10px] font-mono font-medium tracking-wider uppercase text-neutral-500">
-                  {stageTags[idx] || "COHORT TRACK"}
-                </span>
-              </div>
-              <h4 className={`text-sm font-semibold mt-2 truncate ${isActive ? "text-amber-400 animate-fadeIn" : "text-neutral-300"}`}>
-                {course.title.replace("Establishing Your ", "")}
-              </h4>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Active Stage Presentation Grid */}
-      {(() => {
-        const currentCourse = courses[activeStage];
-        if (!currentCourse) return null;
-
-        return (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-6xl mx-auto">
-            
-            {/* Left Column: Stage Core Manifesto */}
-            <div className="lg:col-span-5 bg-gradient-to-br from-[#121214] via-[#151518] to-[#0e0e10] border border-neutral-800/90 rounded-3xl p-8 flex flex-col justify-between relative shadow-2xl overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-b from-amber-500/[0.015] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              <div>
-                <span className="text-[10px] font-mono text-amber-500 bg-amber-500/10 px-2.5 py-1 rounded border border-amber-500/20 font-bold uppercase tracking-widest block max-w-max mb-6">
-                  STAGE 0{activeStage + 1} DIRECTIVE
-                </span>
-                
-                <h4 className="text-2xl sm:text-3xl font-normal font-serif text-white mb-4 leading-snug">
-                  {currentCourse.title}
-                </h4>
-
-                <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed font-sans font-light mb-6">
-                  {currentCourse.description}
-                </p>
-
-                <div className="space-y-3.5 border-t border-neutral-900 pt-6">
-                  <div className="flex items-center gap-3 text-xs text-neutral-300">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                    <span>Total master classes: <strong>{currentCourse.lessons.length} Modules</strong></span>
-                  </div>
-                  <div className="flex items-center gap-3 text-xs text-neutral-300">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                    <span>Avg lesson duration: <strong>~20 minutes intense</strong></span>
-                  </div>
-                  <div className="flex items-center gap-3 text-xs text-neutral-300">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                    <span>Includes direct interactive blueprints &amp; kits</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-neutral-950 flex flex-col gap-3">
-                <button
-                  onClick={() => onNavigateToDashboard("lessons")}
-                  className="w-full py-3.5 px-4 rounded-xl bg-amber-500 text-black font-semibold text-xs uppercase tracking-wider font-sans hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-amber-500/10 cursor-pointer"
-                >
-                  <Tv className="w-4 h-4" /> Stream Full Lessons in Portal <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-                <span className="text-[10px] font-mono text-center text-neutral-500 block">
-                  Accessible instantly on dashboard for registered members
-                </span>
-              </div>
+      {/* THE 12-MONTH PLAN CHRONOLOGICAL ROADMAP */}
+      <div className="max-w-5xl mx-auto mb-16">
+        <div className="text-center mb-8">
+          <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest">
+            THE 12-MONTH PLAN
+          </span>
+        </div>
+        
+        {/* Visual Timeline Steps Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-2 bg-neutral-900/60 rounded-2xl border border-neutral-800/80">
+          <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-850 flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono text-amber-400 font-bold block mb-1">STAGE 01</span>
+              <p className="text-xs font-bold text-white uppercase">[ Q1: SETUP ]</p>
             </div>
-
-            {/* Right Column: Lessons Interactive Tree & Media summary */}
-            <div className="lg:col-span-7 bg-[#0b0b0d] border border-neutral-900/80 rounded-3xl p-8 flex flex-col justify-between">
-              
-              <div className="space-y-6">
-                <div className="flex justify-between items-baseline border-b border-neutral-900 pb-4">
-                  <h5 className="text-xs font-mono text-neutral-400 uppercase tracking-widest font-bold">
-                    SELECT LESSON TO PLAY PREVIEW SUMMARY
-                  </h5>
-                  <span className="text-[10px] font-mono text-amber-500">
-                    {currentCourse.lessons.length} Modules
-                  </span>
-                </div>
-
-                {/* Lesson interactive pills */}
-                <div className="space-y-3">
-                  {currentCourse.lessons.map((lesson, scoreIdx) => {
-                    const isSelected = selectedLesson?.title === lesson.title;
-                    return (
-                      <div
-                        key={lesson.id}
-                        onClick={() => setSelectedLesson(lesson)}
-                        className={`p-4 rounded-xl border transition-all duration-300 cursor-pointer group ${
-                          isSelected
-                            ? "bg-neutral-900/80 border-amber-500/30 text-white"
-                            : "bg-neutral-950/40 border-neutral-900 hover:bg-neutral-900/30 hover:border-neutral-800"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex items-start gap-3">
-                            <span className="w-6 h-6 rounded-md bg-neutral-900 border border-neutral-800 flex items-center justify-center shrink-0 text-[11px] font-mono font-bold text-neutral-400 group-hover:text-amber-400 transition-colors">
-                              {scoreIdx + 1}
-                            </span>
-                            <div>
-                              <p className={`text-xs sm:text-sm font-semibold leading-snug transition-colors ${
-                                isSelected ? "text-amber-400" : "text-neutral-200 group-hover:text-white"
-                              }`}>
-                                {lesson.title}
-                              </p>
-                              <div className="flex items-center gap-2 mt-1">
-                                <span className="text-[10px] font-mono text-neutral-500">{lesson.duration} duration</span>
-                                <span className="text-[10px] text-neutral-700">•</span>
-                                <span className="text-[10px] font-mono text-amber-400/60 uppercase">Exclusive Masterclass</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className={`p-1.5 rounded-full ${
-                            isSelected ? "bg-amber-400 text-black" : "bg-neutral-900 text-neutral-500 group-hover:text-amber-400"
-                          } transition-colors shrink-0`}>
-                            <Play className="w-3 h-3 fill-current" />
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Dynamic summary preview block based on click */}
-              <div className="mt-8 p-5 bg-neutral-950 rounded-2xl border border-neutral-900 relative overflow-hidden">
-                <div className="absolute top-2 right-2 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[8px] font-mono text-neutral-500 uppercase">SYS READY</span>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Sparkles className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-                  <div>
-                    <h6 className="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-widest mb-1">
-                      {selectedLesson ? "ACTIVE MODULE PREVIEW" : "INTEGRATED LAB INSIGHTS"}
-                    </h6>
-                    <p className="text-xs text-neutral-200 font-sans leading-relaxed">
-                      {selectedLesson 
-                        ? selectedLesson.summary 
-                        : "Click any interactive module lesson above to evaluate its direct clinical script-to-performance architecture, pacing guides, and set blockings."}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
+            <p className="text-[11px] text-neutral-400 mt-2">Building Your Brand</p>
           </div>
-        );
-      })()}
-      
-      {/* Decorative Brand Accent block */}
-      <div className="mt-16 text-center">
-        <p className="text-[11px] font-mono text-neutral-500 uppercase tracking-widest">
-          ESTIMATED LAB DIFFICULTY: HIGH IMPACT • CERTIFIED PVT. LTD. INCORPORATION GUARANTEED
-        </p>
+
+          <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-850 flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono text-amber-400 font-bold block mb-1">STAGE 02</span>
+              <p className="text-xs font-bold text-white uppercase">[ Q2: SCRIPT &amp; CAST ]</p>
+            </div>
+            <p className="text-[11px] text-neutral-400 mt-2">Getting Ready to Shoot</p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-850 flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono text-amber-400 font-bold block mb-1">STAGE 03</span>
+              <p className="text-xs font-bold text-white uppercase">[ Q3: SHOOT ]</p>
+            </div>
+            <p className="text-[11px] text-neutral-400 mt-2">Making Your 15 Episodes</p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-850 flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono text-amber-400 font-bold block mb-1">STAGE 04</span>
+              <p className="text-xs font-bold text-white uppercase">[ Q4: RELEASE &amp; EARN ]</p>
+            </div>
+            <p className="text-[11px] text-neutral-400 mt-2">Premiere &amp; Profits</p>
+          </div>
+        </div>
       </div>
 
+      {/* THE BREAKDOWN DETAIL CARDS */}
+      <div className="max-w-5xl mx-auto space-y-8">
+        <div className="flex items-center gap-2 border-b border-neutral-800 pb-3 mb-6">
+          <Calendar className="w-5 h-5 text-amber-500" />
+          <h4 className="text-lg font-bold text-white uppercase tracking-wider font-mono">
+            THE BREAKDOWN
+          </h4>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          {/* Q1 CARD */}
+          <div className="bg-[#121214] border border-neutral-800 rounded-2xl p-6 relative overflow-hidden group hover:border-amber-500/25 transition-all">
+            <div className="absolute top-0 left-0 w-1.5 h-full bg-amber-500" />
+            <div className="flex items-start gap-4">
+              <span className="p-3 bg-amber-500/10 rounded-xl text-amber-400 shrink-0">
+                <Rocket className="w-6 h-6" />
+              </span>
+              <div>
+                <h5 className="text-base font-bold text-white font-display mb-1">
+                  🚀 Q1: BUILDING YOUR BRAND <span className="text-xs text-neutral-400 font-mono font-normal">(Months 1–3)</span>
+                </h5>
+                <p className="text-xs text-amber-400 font-mono font-bold uppercase tracking-wider mb-3">
+                  The Focus: Start your career as a professional, not just an aspiring filmmaker.
+                </p>
+                <ul className="space-y-3 text-xs text-neutral-300">
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span><strong>Social Media Mastery:</strong> Learn how to use Reels and Shorts to build a fan base before you even release your first film.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span><strong>Company Setup:</strong> We help you register your own company. You will learn the basics of banking, taxes, and how to run your business like a pro.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span><strong>Story &amp; Pitching:</strong> Stop making &quot;art films&quot; nobody watches. Learn how to write thrillers and commercial content that audiences actually want to pay for.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Q2 CARD */}
+          <div className="bg-[#121214] border border-neutral-800 rounded-2xl p-6 relative overflow-hidden group hover:border-amber-500/25 transition-all">
+            <div className="absolute top-0 left-0 w-1.5 h-full bg-amber-500/80" />
+            <div className="flex items-start gap-4">
+              <span className="p-3 bg-amber-500/10 rounded-xl text-amber-400 shrink-0">
+                <Target className="w-6 h-6" />
+              </span>
+              <div>
+                <h5 className="text-base font-bold text-white font-display mb-1">
+                  🎯 Q2: SCRIPT &amp; CAST <span className="text-xs text-neutral-400 font-mono font-normal">(Months 4–6)</span>
+                </h5>
+                <p className="text-xs text-amber-400 font-mono font-bold uppercase tracking-wider mb-3">
+                  The Focus: Preparing your project so it looks professional, not amateur.
+                </p>
+                <ul className="space-y-3 text-xs text-neutral-300">
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span><strong>Finding Stories:</strong> Learn how to find great books or news stories and turn them into gripping film scripts.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span><strong>Casting Stars:</strong> Learn the secret to pitching your idea to actors (and their agents) so you can get recognizable faces in your film without needing a massive budget.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span><strong>Visual Strategy:</strong> We teach you the camera techniques used in blockbuster movies—how to frame shots and block scenes like a pro director.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Q3 CARD */}
+          <div className="bg-[#121214] border border-neutral-800 rounded-2xl p-6 relative overflow-hidden group hover:border-amber-500/25 transition-all">
+            <div className="absolute top-0 left-0 w-1.5 h-full bg-amber-500/60" />
+            <div className="flex items-start gap-4">
+              <span className="p-3 bg-amber-500/10 rounded-xl text-amber-400 shrink-0">
+                <Film className="w-6 h-6" />
+              </span>
+              <div>
+                <h5 className="text-base font-bold text-white font-display mb-1">
+                  🎬 Q3: THE SHOOT <span className="text-xs text-neutral-400 font-mono font-normal">(Months 7–9)</span>
+                </h5>
+                <p className="text-xs text-amber-400 font-mono font-bold uppercase tracking-wider mb-3">
+                  The Focus: Getting your 15 episodes on camera.
+                </p>
+                <ul className="space-y-3 text-xs text-neutral-300">
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span><strong>Working as a Crew:</strong> You will shoot your own films, and your fellow students will act as your crew (lighting, camera, sound). You will rotate roles, so you learn exactly how a real set functions.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span><strong>Directing Like a Pro:</strong> Learn how to handle actors, follow set rules, and talk to union crews. This is about discipline and respect on set.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span><strong>Editing &amp; Finishing:</strong> Learn the post-production pipeline—how to edit, color-grade, and design sound to make your film look and sound expensive.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Q4 CARD */}
+          <div className="bg-[#121214] border border-neutral-800 rounded-2xl p-6 relative overflow-hidden group hover:border-amber-500/25 transition-all">
+            <div className="absolute top-0 left-0 w-1.5 h-full bg-amber-500/40" />
+            <div className="flex items-start gap-4">
+              <span className="p-3 bg-amber-500/10 rounded-xl text-amber-400 shrink-0">
+                <DollarSign className="w-6 h-6" />
+              </span>
+              <div>
+                <h5 className="text-base font-bold text-white font-display mb-1">
+                  💰 Q4: RELEASE &amp; EARN <span className="text-xs text-neutral-400 font-mono font-normal">(Months 10–12)</span>
+                </h5>
+                <p className="text-xs text-amber-400 font-mono font-bold uppercase tracking-wider mb-3">
+                  The Focus: Getting your work on screen and making money.
+                </p>
+                <ul className="space-y-3 text-xs text-neutral-300">
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span><strong>Going Live:</strong> Your final episodes go up on muvireel.com. We handle the tech; you focus on the launch.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span><strong>Getting Paid:</strong> Learn how to pitch your work to brands for sponsorships. We show you how to sign deals where brands pay you to distribute your content.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span><strong>The Graduation Pitch:</strong> No gowns or certificates here. You will pitch your finished work directly to media buyers and OTT platforms in Mumbai. This is where your career officially starts.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* BOTTOM SUMMARY BLOCK */}
+        <div className="mt-12 bg-neutral-900/40 border border-neutral-800 rounded-2xl p-6 text-center max-w-4xl mx-auto">
+          <p className="text-sm text-neutral-200 leading-relaxed font-sans mb-4">
+            <strong className="text-white">The bottom line:</strong> You aren&apos;t just learning to hold a camera. You&apos;re learning to own your career. One cohort. One year. <strong className="text-amber-400">Absolute industry leverage.</strong>
+          </p>
+          <button 
+            onClick={() => onNavigateToDashboard("lessons")}
+            className="inline-flex items-center gap-2 px-6 py-2.5 bg-amber-500 text-black hover:bg-amber-400 text-xs font-bold uppercase font-mono tracking-wider rounded-lg transition-all cursor-pointer"
+          >
+            Enter Student Portal &amp; See Syllabus Materials <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
     </section>
   );
 }

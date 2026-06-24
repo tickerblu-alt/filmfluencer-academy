@@ -24,16 +24,24 @@ import {
   ChevronDown,
   ChevronUp,
   BookOpen,
-  Info
+  Info,
+  X
 } from "lucide-react";
 import { PortfolioData, Course } from "../types";
 import FilmfluencerThesis from "./FilmfluencerThesis";
 import TheJourney from "./TheJourney";
 import FFACurriculum from "./FFACurriculum";
+import MuvireelDistribution from "./MuvireelDistribution";
+import FilmIndustryRedirected from "./FilmIndustryRedirected";
 import TheCreativeEngine from "./TheCreativeEngine";
 import UltimateStudentYields from "./UltimateStudentYields";
 import MumbaiStudioContact from "./MumbaiStudioContact";
 import WhatsAppWidget from "./WhatsAppWidget";
+import FFAWorkGallery from "./FFAWorkGallery";
+import StudentInterviewPortal from "./StudentInterviewPortal";
+import ELearnSection from "./ELearnSection";
+import EnquiryPopup from "./EnquiryPopup";
+import ScrollToTop from "./ScrollToTop";
 
 interface LandingPageProps {
   portfolio: PortfolioData | null;
@@ -48,6 +56,11 @@ interface LandingPageProps {
   onTriggerPayment: (amount: number, purpose: string) => void;
   onCreateSubscription: (planName: string, amount: number, interval: "monthly" | "quarterly") => void;
   onNavigateToDashboard: (initialTab?: string) => void;
+  isAdminPowerActive?: boolean;
+  onEditAsset?: (asset: any) => void;
+  currentUser?: any;
+  onTriggerAuth?: () => void;
+  onSignOut?: () => void;
 }
 
 export default function LandingPage({
@@ -57,6 +70,11 @@ export default function LandingPage({
   onTriggerPayment,
   onCreateSubscription,
   onNavigateToDashboard,
+  isAdminPowerActive = false,
+  onEditAsset,
+  currentUser,
+  onTriggerAuth,
+  onSignOut,
 }: LandingPageProps) {
   // Enquiry form state
   const [name, setName] = useState("");
@@ -257,6 +275,8 @@ export default function LandingPage({
     return () => clearInterval(interval);
   }, []);
 
+  const [globalPlayVideoId, setGlobalPlayVideoId] = useState<string | null>(null);
+
   // Form submission handler
   const handleEnquirySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -307,25 +327,49 @@ export default function LandingPage({
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-neutral-300">
           <a href="#portfolio" className="hover:text-amber-400 transition-colors">The Director</a>
           <a href="#curriculum" className="hover:text-amber-400 transition-colors">Curriculum</a>
-          <a href="#faq" className="hover:text-amber-400 transition-colors">Pre-reqs</a>
+          <a href="#elearn-portal" className="text-amber-400 hover:text-amber-300 transition-colors font-bold flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" /> E-Learn
+          </a>
+          <a href="#ffa-work-gallery" className="hover:text-amber-400 transition-colors">Work Gallery</a>
+          <a href="#artistic-challenge" className="hover:text-amber-400 transition-colors font-semibold text-red-400">Admissions Challenge</a>
           <a href="#pricing" className="hover:text-amber-400 transition-colors">Pricing</a>
         </nav>
 
         {/* Dynamic Nav CTA */}
         <div className="flex items-center gap-3">
-          <button 
-            onClick={() => onNavigateToDashboard("lessons")}
-            className="text-xs font-mono px-4 py-2 rounded-full border border-neutral-800 text-neutral-300 hover:border-amber-400/40 hover:text-amber-400 transition-all cursor-pointer"
-          >
-            Enter Student Streaming Hub
-          </button>
-          
-          <a 
-            href="#enroll" 
-            className="text-xs font-bold font-mono px-4 py-2 rounded bg-amber-500 text-black hover:bg-amber-400 transition-all font-display"
-          >
-            Book Seat
-          </a>
+          {currentUser ? (
+            <div className="flex items-center gap-2">
+              <span className={`text-[10px] font-mono uppercase font-black px-2.5 py-1.5 rounded-full border ${
+                currentUser.role === "admin"
+                  ? "bg-red-500/10 text-red-400 border-red-500/30 animate-pulse"
+                  : "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+              }`}>
+                {currentUser.role === "admin" ? "⚡ ADMIN POWER" : `🎓 student: ${currentUser.name}`}
+              </span>
+              <button 
+                onClick={onSignOut}
+                className="text-[10px] font-mono px-3 py-1.5 rounded bg-neutral-900 border border-neutral-850 text-neutral-400 hover:text-white hover:border-red-500/30 transition-all cursor-pointer"
+              >
+                Sign-Out
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={onTriggerAuth}
+              className="text-xs font-bold font-mono px-4 py-2 rounded bg-amber-500 text-black hover:bg-amber-400 transition-all flex items-center gap-1.5 shadow-md shadow-amber-500/10 cursor-pointer"
+            >
+              🔒 PORTAL SIGN-ON / REGISTER
+            </button>
+          )}
+
+          {isAdminPowerActive && (
+            <button 
+              onClick={() => onNavigateToDashboard("lessons")}
+              className="text-xs font-mono px-4 py-2 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500 hover:text-black transition-all cursor-pointer"
+            >
+              STUDENT HUB
+            </button>
+          )}
         </div>
       </header>
 
@@ -344,6 +388,18 @@ export default function LandingPage({
               Make it. Own it. Sell it.
             </span>
           </h2>
+
+          {/* WHY FILMFLUENCER ACADEMY? SECTION */}
+          <div className="my-8 max-w-3xl mx-auto p-6 bg-[#121214] border border-neutral-800 rounded-2xl text-left shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 left-0 w-1 h-full bg-amber-500" />
+            <h3 className="text-xs font-mono font-extrabold text-amber-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+              WHY FILMFLUENCER ACADEMY?
+            </h3>
+            <p className="text-sm text-neutral-300 leading-relaxed font-sans">
+              The future belongs to filmmakers who own their audience. FilmFluencer Academy (FFA) is India's premier high-production accelerator teaching modern scripting, raw cinematography, professional editing, hyper-social-brand-crafting and short&amp;long form theatrical distribution on our groundbreaking upcoming network: <strong className="text-amber-400">MUVIREEL</strong>.
+            </p>
+          </div>
           
           <p className="text-base sm:text-lg text-neutral-300 max-w-3xl mx-auto leading-relaxed mb-8 font-sans">
             Graduate in 365 days with your own <strong className="text-amber-400">Feature Film</strong>, 
@@ -408,18 +464,38 @@ export default function LandingPage({
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a 
-              href="#enroll" 
-              className="w-full sm:w-auto px-8 py-4 rounded-lg bg-amber-500 text-black font-semibold hover:bg-amber-400 transition-all flex items-center justify-center gap-2 text-base shadow-lg shadow-amber-500/10 font-display cursor-pointer"
+            <button 
+              onClick={() => {
+                if (isAdminPowerActive) {
+                  window.location.hash = "enroll";
+                } else {
+                  alert("🔒 ADMIN POWER REQUIRED: This action requires Admin Power to be signed on! Please register or sign-on as an Admin in the navigation header first.");
+                }
+              }}
+              className={`w-full sm:w-auto px-8 py-4 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 text-base shadow-lg cursor-pointer font-display ${
+                isAdminPowerActive 
+                  ? "bg-amber-500 text-black hover:bg-amber-400 shadow-amber-500/10" 
+                  : "bg-neutral-800 text-neutral-500 border border-neutral-700 cursor-not-allowed opacity-50"
+              }`}
             >
-              Reserve Seat for ₹20,000 <ArrowRight className="w-5 h-5" />
-            </a>
+              Reserve Seat for ₹20,000 {!isAdminPowerActive && "🔒"} <ArrowRight className="w-5 h-5" />
+            </button>
             
             <button 
-              onClick={() => onNavigateToDashboard("lessons")}
-              className="w-full sm:w-auto px-8 py-4 rounded-lg bg-[#141416] border border-neutral-800 text-white font-medium hover:border-neutral-700 hover:bg-[#1a1a1d] transition-all flex items-center justify-center gap-2 text-base cursor-pointer"
+              onClick={() => {
+                if (isAdminPowerActive) {
+                  onNavigateToDashboard("lessons");
+                } else {
+                  alert("🔒 ADMIN POWER REQUIRED: The Student Hub is restricted to Admin Power only! Please authenticate in the header first.");
+                }
+              }}
+              className={`w-full sm:w-auto px-8 py-4 rounded-lg border text-white font-medium transition-all flex items-center justify-center gap-2 text-base cursor-pointer ${
+                isAdminPowerActive
+                  ? "bg-[#141416] border-neutral-800 hover:border-neutral-700 hover:bg-[#1a1a1d]"
+                  : "bg-neutral-900/40 border-neutral-850 text-neutral-500 cursor-not-allowed opacity-50"
+              }`}
             >
-              Stream Core Lessons Live <Play className="w-4 h-4 text-amber-400 fill-current" />
+              Access STUDENT HUB {!isAdminPowerActive && "🔒"} <Play className="w-4 h-4 text-amber-400 fill-current" />
             </button>
           </div>
           
@@ -428,6 +504,8 @@ export default function LandingPage({
           </p>
         </div>
       </section>
+
+      <FilmIndustryRedirected />
 
       <FilmfluencerThesis
         simulatorAspect={simulatorAspect}
@@ -445,6 +523,10 @@ export default function LandingPage({
       <TheJourney />
 
       <FFACurriculum courses={courses} onNavigateToDashboard={onNavigateToDashboard} />
+
+      <MuvireelDistribution />
+
+      <ELearnSection />
 
       {/* COMPARATIVE GRID */}
       <section id="pricing" className="py-20 px-6 max-w-7xl mx-auto border-b border-neutral-900">
@@ -497,6 +579,8 @@ export default function LandingPage({
           </div>
         </div>
       </section>
+
+      <StudentInterviewPortal onAddEnquiry={onSubmitEnquiry} />
 
       {/* ENQUIRY & RESERVATION SECTION */}
       <section id="enroll" className="py-20 px-6 max-w-7xl mx-auto bg-gradient-to-t from-[#0e0e0f] to-transparent rounded-3xl border border-neutral-900 overflow-hidden">
@@ -770,6 +854,8 @@ export default function LandingPage({
         </div>
       </section>
 
+      <FFAWorkGallery onPlayVideo={(id) => setGlobalPlayVideoId(id)} />
+
       {/* MUMBAI INFRASTRUCTURE & CONTACT */}
       <MumbaiStudioContact onNavigateToDashboard={onNavigateToDashboard} />
 
@@ -814,10 +900,10 @@ export default function LandingPage({
               DEEPLINKS
             </span>
             <div className="flex flex-col gap-2 text-xs font-mono text-neutral-500">
-              <button onClick={() => onNavigateToDashboard("lessons")} className="text-left hover:text-red-400 transition-colors">Cohort Courses</button>
-              <button onClick={() => onNavigateToDashboard("student-profile")} className="text-left hover:text-red-400 transition-colors">Student Profile Portal</button>
-              <button onClick={() => onNavigateToDashboard("enquiries")} className="text-left hover:text-red-400 transition-colors">Admin Leads Database</button>
-              <a href="#footnotes" className="text-left hover:text-red-400 transition-colors font-bold text-neutral-400">View Button Footnotes &uarr;</a>
+              <button onClick={() => onNavigateToDashboard("lessons")} className="text-left hover:text-amber-400 transition-colors">STUDENT HUB</button>
+              <button onClick={() => onNavigateToDashboard("student-profile")} className="text-left hover:text-amber-400 transition-colors">Student Profile Portal</button>
+              <button onClick={() => onNavigateToDashboard("enquiries")} className="text-left hover:text-amber-400 transition-colors">Admin Leads Database [Admin Only]</button>
+              <a href="#footnotes" className="text-left hover:text-amber-400 transition-colors font-bold text-neutral-400">View Button Footnotes &uarr;</a>
             </div>
           </div>
 
@@ -835,6 +921,47 @@ export default function LandingPage({
 
       {/* FLOAT WHATSAPP ADMISSION COUNSELLOR COLLATERALS */}
       <WhatsAppWidget />
+
+      <EnquiryPopup onSubmitEnquiry={onSubmitEnquiry} />
+
+      <ScrollToTop />
+
+      {/* IMMERSIVE STREAMING MODAL IF PLAYING ASSET */}
+      {globalPlayVideoId && (
+        <div className="fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center p-4 backdrop-blur-md animate-fadeIn" id="global-video-modal">
+          <div className="relative w-full max-w-4xl bg-neutral-950 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl">
+            {/* Modal header bar */}
+            <div className="p-4 border-b border-neutral-900 flex justify-between items-center bg-black/60">
+              <span className="text-xs font-mono font-bold text-amber-400 tracking-wider uppercase">
+                🔴 STREAMING PREVIEW • FFA WORK GALLERY
+              </span>
+              <button 
+                onClick={() => setGlobalPlayVideoId(null)}
+                className="p-2 rounded-lg bg-[#141416] border border-neutral-800 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Embedded video player */}
+            <div className="relative aspect-video">
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src={`https://www.youtube.com/embed/${globalPlayVideoId}?autoplay=1&rel=0`}
+                title="Cinematic Asset Preview"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+
+            <div className="p-6 bg-neutral-950 text-center border-t border-neutral-900">
+              <p className="text-xs text-neutral-400 font-mono">
+                Authorized for prospective candidates. Uncut video assets are legally owned and copyrighted by Filmfluencer Academy.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

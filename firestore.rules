@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /ffa_media/{document} {
+      allow read, write: if true;
+    }
+    
+    match /ffa_calendar/{document} {
+      allow read, write: if true;
+    }
+    
+    match /ffa_cohorts/{document} {
+      allow read, write: if true;
+    }
+    
+    match /ffa_pvt_ltd/{document} {
+      allow read, write: if true;
+    }
+    
+    match /ffa_notifications/{document} {
+      allow read, write: if true;
+    }
+    
+    match /ffa_users/{document} {
+      allow read, write: if true;
+    }
+    
+    match /ffa_online_courses/{document} {
+      allow read, write: if true;
+    }
+    
+    match /ffa_activity_logs/{document} {
+      allow read, write: if true;
+    }
+  }
+}

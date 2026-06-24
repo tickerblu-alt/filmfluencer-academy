@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { 
   MapPin, 
   Phone, 
@@ -10,7 +10,10 @@ import {
   Award, 
   ShieldCheck, 
   ArrowRight,
-  Info
+  Info,
+  Upload,
+  Trash2,
+  Plus
 } from "lucide-react";
 
 // Paths for generated assets
@@ -21,7 +24,75 @@ interface MumbaiStudioContactProps {
   onNavigateToDashboard: (initialTab?: string) => void;
 }
 
+interface CustomStudioImage {
+  id: string;
+  url: string;
+  caption: string;
+  timestamp: string;
+}
+
 export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStudioContactProps) {
+  const [studioImages, setStudioImages] = useState<CustomStudioImage[]>([]);
+  const [captionInput, setCaptionInput] = useState("");
+  const [feedback, setFeedback] = useState("");
+
+  // Load custom uploaded images from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("ffa_custom_studio_images");
+    if (saved) {
+      try {
+        setStudioImages(JSON.parse(saved));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
+
+  const saveImages = (images: CustomStudioImage[]) => {
+    setStudioImages(images);
+    localStorage.setItem("ffa_custom_studio_images", JSON.stringify(images));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setFeedback("Please select a valid image file.");
+      return;
+    }
+
+    if (file.size > 3 * 1024 * 1024) {
+      setFeedback("Image is too large. Keep it under 3MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      const newImg: CustomStudioImage = {
+        id: "img_" + Date.now(),
+        url: dataUrl,
+        caption: captionInput || file.name.split(".")[0] || "Custom Studio Capture",
+        timestamp: new Date().toLocaleDateString("en-IN", { day: 'numeric', month: 'short', year: 'numeric' })
+      };
+      
+      const updated = [newImg, ...studioImages];
+      saveImages(updated);
+      setCaptionInput("");
+      setFeedback("Studio image uploaded successfully!");
+      setTimeout(() => setFeedback(""), 3000);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDeleteImage = (id: string) => {
+    const updated = studioImages.filter(img => img.id !== id);
+    saveImages(updated);
+    setFeedback("Image removed from studio database.");
+    setTimeout(() => setFeedback(""), 3000);
+  };
+
   return (
     <section id="mumbai-studio" className="py-24 px-6 max-w-7xl mx-auto border-b border-neutral-900 bg-black relative">
       
@@ -146,6 +217,103 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
           </div>
         </div>
 
+      </div>
+
+      {/* STUDENT SET UPLOADS & CUSTOM GALLERY */}
+      <div className="mb-24 bg-neutral-950/60 border border-neutral-900 rounded-3xl p-8 max-w-6xl mx-auto relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/[0.01] rounded-full blur-[80px] pointer-events-none" />
+        
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-neutral-900 pb-6 mb-8">
+          <div>
+            <span className="text-[10px] font-mono text-red-500 uppercase tracking-widest block font-bold mb-1">
+              PROSPECTIVE STUDENT &amp; SET SHOTS
+            </span>
+            <h4 className="text-2xl font-serif text-white tracking-tight font-normal">
+              Andheri Set &amp; Studio Gallery
+            </h4>
+            <p className="text-xs text-neutral-400 mt-1">
+              Add your own production stills, camera tests, or physical campus visit photos to our real-time community stream.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch shrink-0">
+            <input 
+              type="text"
+              value={captionInput}
+              onChange={(e) => setCaptionInput(e.target.value)}
+              placeholder="Caption (e.g. Set Visit ARRI Lab)"
+              className="px-4 py-2.5 bg-neutral-900 border border-neutral-800 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-red-500 font-mono w-full sm:w-56"
+            />
+            <label className="px-5 py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-semibold uppercase tracking-wider font-mono flex items-center justify-center gap-2 cursor-pointer transition-colors shadow-lg shadow-red-600/10 shrink-0">
+              <Upload className="w-4 h-4" />
+              Upload Image
+              <input 
+                type="file" 
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden" 
+              />
+            </label>
+          </div>
+        </div>
+
+        {/* Feedback message */}
+        {feedback && (
+          <div className="mb-6 p-3.5 bg-neutral-900 border border-neutral-800 text-neutral-300 rounded-xl text-xs font-mono flex items-center gap-2 animate-pulse">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+            {feedback}
+          </div>
+        )}
+
+        {/* Dynamic User Images Grid */}
+        {studioImages.length === 0 ? (
+          <div className="border-2 border-dashed border-neutral-850 rounded-2xl py-12 px-6 text-center space-y-3">
+            <div className="w-12 h-12 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mx-auto text-neutral-500">
+              <Camera className="w-5 h-5" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs font-semibold text-neutral-300 uppercase font-mono tracking-wider">No custom set uploads yet</p>
+              <p className="text-[11px] text-neutral-500">Use the upload button above to add your physical studio and film shoot captures!</p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {studioImages.map((img) => (
+              <div 
+                key={img.id}
+                className="group relative bg-neutral-900 border border-neutral-850 rounded-2xl overflow-hidden shadow-md flex flex-col justify-between"
+              >
+                <div className="relative aspect-video w-full overflow-hidden bg-neutral-950">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 z-10" />
+                  <img 
+                    src={img.url} 
+                    alt={img.caption}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  
+                  {/* Delete button */}
+                  <button
+                    onClick={() => handleDeleteImage(img.id)}
+                    className="absolute top-3 right-3 z-20 p-2 rounded-lg bg-black/80 border border-neutral-800 text-neutral-400 hover:text-red-400 hover:border-red-500/40 transition-all opacity-0 group-hover:opacity-100 cursor-pointer"
+                    title="Remove Image"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="p-4 space-y-1 bg-[#0e0e10]">
+                  <p className="text-xs font-semibold text-white truncate font-sans tracking-wide">
+                    {img.caption}
+                  </p>
+                  <div className="flex items-center justify-between text-[9px] font-mono text-neutral-500">
+                    <span>UPLINKED: LOCAL DEVICE</span>
+                    <span className="text-neutral-400 font-bold">{img.timestamp}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* CONTACT INFORMATION PANEL */}

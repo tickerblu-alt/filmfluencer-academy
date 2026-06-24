@@ -91,7 +91,7 @@ export default function FilmfluencerThesis({
                 <span className="text-emerald-400 text-lg">👑</span> Media-Managed Filmfluencer
               </h4>
               <p className="text-xs text-neutral-300 leading-relaxed mb-6">
-                We have redesigned the exact purpose of tuition. Almost half of your premium fee is reallocated directly to build <span className="text-amber-400 font-semibold">your real social media base, 1-year brand elevation, PR syndication, and private limited studio ownership</span>. You learn how to build massive followings for your cinema and products!
+                We have redesigned the exact purpose of tuition. Almost one-fourth of your premium fee is reallocated directly to build <span className="text-amber-400 font-semibold">your real social media base, 1-year brand elevation, PR syndication, and private limited studio ownership</span>. You learn how to build massive followings for your cinema and products!
               </p>
 
               <div className="space-y-3.5 border-t border-amber-500/10 pt-5">
@@ -277,10 +277,10 @@ export default function FilmfluencerThesis({
                 Track A — Technical Filmmaker
               </span>
               <h4 className="text-2xl font-bold font-display text-white mb-2 tracking-tight">
-                CINEMA-GRADE EXECUTION
+                ON-SET CINEMA-GRADE EXECUTION
               </h4>
               <p className="text-xs text-amber-500/80 font-mono mb-6 uppercase tracking-wider">
-                The On-set craft mastery
+                The On-set industry-tool &amp; craft mastery
               </p>
               
               <ul className="space-y-4">
@@ -293,13 +293,13 @@ export default function FilmfluencerThesis({
                 <li className="flex gap-3">
                   <span className="text-amber-500 shrink-0 mt-0.5">🎥</span>
                   <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans">
-                    <strong className="text-white">Single-take guerrilla production:</strong> Pocket Gangsters method designed across 40 distinct locations with zero complex studio footprints.
+                    Full fledged Studio Centric Film-Craft along guerrilla production WorkFlow: Real Footrprint Holywood tech Centric Productiom Design &amp; Das&apos;s &apos;Pocket Gangsters&apos; Single-take Linear-Studio Filmmkaing
                   </p>
                 </li>
                 <li className="flex gap-3">
                   <span className="text-amber-500 shrink-0 mt-0.5">💾</span>
                   <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans">
-                    <strong className="text-white">Advanced post-production workflow:</strong> Master professional industry-grade colour grading, spatial sound design, and robust custom edit pipelines.
+                    Advanced post-production workflow: Master professional industry-grade colour grading, spatial sound design, and robust custom edit pipelines.
                   </p>
                 </li>
               </ul>
