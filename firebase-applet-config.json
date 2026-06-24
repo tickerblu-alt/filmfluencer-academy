@@ -1,10 +1,10 @@
 {
-  "projectId": "prozeniusmedia",
-  "appId": "1:813026083230:web:478280c197e8cde882168f",
-  "apiKey": "AIzaSyANc8pi5Q8d2coUaTPXYwVbnMCz0j5qD-I",
-  "authDomain": "prozeniusmedia.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-7cb0ac2e-fa3a-4683-a981-38825aaaadfd",
-  "storageBucket": "prozeniusmedia.firebasestorage.app",
-  "messagingSenderId": "813026083230",
-  "measurementId": ""
+  "projectId": "YOUR_NEW_PROJECT_ID",
+  "appId": "YOUR_NEW_APP_ID",
+  "apiKey": "YOUR_NEW_API_KEY",
+  "authDomain": "YOUR_NEW_PROJECT_ID.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "YOUR_NEW_PROJECT_ID.firebasestorage.app",
+  "messagingSenderId": "YOUR_NEW_SENDER_ID",
+  "measurementId": "YOUR_NEW_MEASUREMENT_ID"
 }
