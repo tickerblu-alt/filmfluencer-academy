@@ -334,7 +334,7 @@ export default function RazorpayCheckoutModal({
               <h5 className="text-base font-bold text-white font-mono uppercase tracking-widest">TRANSACTION SUCCESS</h5>
               <p className="text-xs text-emerald-400 font-mono">AUTHENTICATION COMPLETED SECURELY</p>
               <p className="text-[10px] text-neutral-500 max-w-xs leading-normal">
-                Your payment of ₹{amount.toLocaleString()} is verified. Seats and wallet credits are instantly secured on the Filmfluencers Academy live ledger.
+                Your payment of ₹{amount.toLocaleString()} is verified. Seats and wallet credits are instantly secured on the Filmfluencer Academy live ledger.
               </p>
             </div>
           </div>

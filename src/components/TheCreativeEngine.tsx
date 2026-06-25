@@ -10,7 +10,8 @@ import {
   Compass, 
   Sparkles, 
   CheckCircle,
-  Eye
+  Eye,
+  ArrowUp
 } from "lucide-react";
 
 interface CreativeAsset {
@@ -58,7 +59,7 @@ export default function TheCreativeEngine() {
       badge: "Active Pitch",
       tags: ["Concept Pilot Film", "Noir Showcase", "Screenplay & Director"],
       quote: "Gritty Neo-Noir Concept & Visual Package",
-      description: "An official flagship showcase designed under the Filmfluencers Academy banner. Pushing stylistic neo-noir boundaries with extreme high-concept continuous takes.",
+      description: "An official flagship showcase designed under the Filmfluencer Academy banner. Pushing stylistic neo-noir boundaries with extreme high-concept continuous takes.",
       cast: "Cast: Indian Indie Theater group actors under Muvireel copyright",
       youtubeId: "vBq72eF_u1A", // Gritty continuous take
       icon: <Compass className="w-5 h-5 text-emerald-400" />
@@ -106,7 +107,7 @@ export default function TheCreativeEngine() {
               </div>
               
               <p className="text-neutral-300 text-base sm:text-lg font-serif italic leading-relaxed text-transparent bg-clip-text bg-gradient-to-r from-neutral-100 via-neutral-200 to-neutral-400 mt-2">
-                LA World International Film Festival Best Director, author of Secular Psycho, and pioneer of uncut hostage action scripts (Pocket Gangsters). Look inside the cinematic blueprints that fuel the Filmfluencers curriculum.
+                LA World International Film Festival Best Director, author of Secular Psycho, and pioneer of uncut hostage action scripts (Pocket Gangsters). Look inside the cinematic blueprints that fuel the Filmfluencer curriculum.
               </p>
             </div>
 
@@ -125,7 +126,7 @@ export default function TheCreativeEngine() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Left Column: Selector list */}
-          <div className="lg:col-span-5 space-y-4">
+          <div className="lg:col-span-5 space-y-4 order-2 lg:order-1">
             <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest block mb-1 font-bold">
               CINEMATIC PORTFOLIO METRICS / Blueprints:
             </span>
@@ -136,7 +137,12 @@ export default function TheCreativeEngine() {
                 return (
                   <button
                     key={asset.id}
-                    onClick={() => setActiveAssetId(asset.id)}
+                    onClick={() => {
+                      setActiveAssetId(asset.id);
+                      if (window.innerWidth < 1024) {
+                        document.getElementById("active-preview-screen")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }
+                    }}
                     className={`p-5 rounded-2xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden group flex flex-col justify-between ${
                       isActive
                         ? "bg-gradient-to-r from-[#1c1917]/30 to-black border-amber-500/40 text-white shadow-xl shadow-amber-500/[0.02]"
@@ -197,11 +203,11 @@ export default function TheCreativeEngine() {
           </div>
 
           {/* Right Column: Immersive active preview screen */}
-          <div className="lg:col-span-7">
+          <div id="active-preview-screen" className="lg:col-span-7 order-1 lg:order-2 scroll-mt-24">
             {(() => {
               const activeAsset = assets.find(a => a.id === activeAssetId) || assets[0];
               return (
-                <div className="bg-gradient-to-b from-[#111113] to-[#0c0c0e] border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl relative group flex flex-col h-full min-h-[500px] justify-between">
+                <div className="bg-gradient-to-b from-[#111113] to-[#0c0c0e] border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl relative group flex flex-col h-full min-h-[400px] sm:min-h-[500px] justify-between">
                   
                   {/* Visual top bar of hub screen */}
                   <div className="p-6 bg-black/40 border-b border-neutral-900 flex items-center justify-between gap-4 flex-wrap">
@@ -287,6 +293,28 @@ export default function TheCreativeEngine() {
 
         </div>
 
+        {/* Place 2: Cult Admissions Button decorated with elegance box and an arrow of hope above */}
+        <div className="mt-16 flex flex-col items-center gap-2.5 border-t border-neutral-900/60 pt-12">
+          <div className="flex flex-col items-center animate-bounce duration-[2500ms]">
+            <span className="text-[9px] text-amber-500/80 font-mono tracking-[0.2em] uppercase mb-1">THE ARROW OF HOPE</span>
+            <ArrowUp className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+            <div className="w-[1px] h-3 bg-gradient-to-t from-amber-500/50 to-transparent mt-0.5" />
+          </div>
+          <a 
+            href="https://wa.me/919004221717?text=I%20want%20to%20Apply%20for%20Admission%20%26%20Reserve%20Seat%20at%20Filmfluencer%20Academy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3.5 px-7 py-3.5 border-2 border-amber-500/30 hover:border-amber-400 rounded-xl bg-neutral-950/80 text-neutral-300 hover:text-white transition-all duration-500 font-mono uppercase text-[11px] tracking-[0.25em] relative group overflow-hidden hover:shadow-[0_0_35px_rgba(245,158,11,0.15)] hover:scale-105"
+          >
+            <div className="absolute inset-0 w-full h-[1px] bg-gradient-to-r from-transparent via-amber-400/20 to-transparent top-0" />
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-60"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+            </span>
+            <span className="font-bold tracking-[0.22em] text-amber-400 group-hover:text-amber-300">Apply for Admission &amp; Reserve Seat</span>
+          </a>
+        </div>
+
       </div>
 
       {/* IMMERSIVE STREAMING MODAL IF PLAYING ASSET */}
@@ -319,7 +347,7 @@ export default function TheCreativeEngine() {
 
             <div className="p-6 bg-neutral-950 text-center border-t border-neutral-900">
               <p className="text-xs text-neutral-400">
-                Authorized for Filmfluencers Academy students. Uncut cinema blueprints remain copyright of Muvireel Private Limited.
+                Authorized for Filmfluencer Academy students. Uncut cinema blueprints remain copyright of Muvireel Private Limited.
               </p>
             </div>
           </div>

@@ -38,7 +38,7 @@ export default function FilmfluencerThesis({
           What is a Filmfluencer?
         </h4>
         <p className="text-neutral-300 max-w-3xl mx-auto text-sm sm:text-base leading-relaxed font-sans">
-          Traditional filmmakers beg studios for opportunities. <strong className="text-amber-400">Filmfluencers command their own distribution.</strong> When you own the connection to the audience, high-level collaborations naturally find you.
+          Traditional filmmakers beg studios for opportunities. <strong className="text-amber-400">Filmfluencer filmmakers command their own distribution.</strong> When you own the connection to the audience, high-level collaborations naturally find you.
         </p>
       </div>
 
@@ -47,7 +47,7 @@ export default function FilmfluencerThesis({
         
         {/* Aspect 1: Traditional Cinema Education VS Aspect 2: The Integrated Enterprise Solution */}
         <div className="lg:col-span-5 space-y-6 flex flex-col justify-between">
-          <div className="bg-gradient-to-br from-[#121215] to-[#15151b] border border-neutral-800 p-8 rounded-3xl relative overflow-hidden flex-1 flex flex-col justify-between">
+          <div className="bg-gradient-to-br from-[#121215] to-[#15151b] border border-neutral-800 p-6 sm:p-8 rounded-3xl relative overflow-hidden flex-1 min-h-fit flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-mono text-red-500 bg-red-950/20 px-2 py-1 rounded border border-red-500/10 font-bold uppercase tracking-wider block max-w-max mb-5">
                 The Old Trapped Way
@@ -81,31 +81,46 @@ export default function FilmfluencerThesis({
           </div>
 
           {/* The Integrated Solution (Positive Brainwashing) */}
-          <div className="bg-gradient-to-br from-[#1c1917] to-[#121214] border-2 border-amber-500/40 p-8 rounded-3xl relative overflow-hidden flex-1 flex flex-col justify-between shadow-2xl shadow-amber-500/5">
+          <div className="bg-gradient-to-br from-[#1c1917] to-[#121214] border-2 border-amber-500/40 p-6 sm:p-8 rounded-3xl relative overflow-hidden flex-1 min-h-fit flex flex-col justify-between shadow-2xl shadow-amber-500/5">
             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/[0.03] rounded-full blur-2xl pointer-events-none" />
             <div>
               <span className="text-[10px] font-mono text-amber-400 bg-amber-950/40 px-2 py-1 rounded border border-amber-500/20 font-bold uppercase tracking-widest block max-w-max mb-5">
-                The Filmfluencer Model (Cohort Core Reallocation)
+                The Filmfluencer Model
               </span>
               <h4 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-                <span className="text-emerald-400 text-lg">👑</span> Media-Managed Filmfluencer
+                <span className="text-emerald-400 text-lg">👑</span> Real Film-Directing &amp; Social Network Authority
               </h4>
-              <p className="text-xs text-neutral-300 leading-relaxed mb-6">
-                We have redesigned the exact purpose of tuition. Almost one-fourth of your premium fee is reallocated directly to build <span className="text-amber-400 font-semibold">your real social media base, 1-year brand elevation, PR syndication, and private limited studio ownership</span>. You learn how to build massive followings for your cinema and products!
-              </p>
+              <div className="text-xs text-neutral-300 leading-relaxed mb-6 space-y-4 font-sans">
+                <p>
+                  Traditional film schools charge for lectures. We invest your tuition back into your career. 25% of your fee is instantly reallocated to fund your corporate setup, PR, and audience growth.
+                </p>
+                <div className="bg-black/40 p-4 rounded-xl border border-neutral-800/80 font-mono text-[10px] text-amber-400/90 whitespace-pre leading-normal overflow-x-auto">
+{`[ Total Premium Program Investment ]
+  ├── 75%  │ Elite Practical Training & On-Set Feature Directing
+  └── 25%  │ Career Capital Reallocation (Company, PR, & Audience)`}
+                </div>
+                
+                <div className="space-y-4 border-t border-amber-500/10 pt-4">
+                  <p className="text-xs font-bold text-white uppercase tracking-wider font-mono">Tuition Allocation:</p>
+                  
+                  <div className="space-y-1">
+                    <p className="text-xs font-bold text-amber-400">75% — Elite Production &amp; Directorship Training</p>
+                    <ul className="list-disc pl-4 space-y-1 text-[11px] text-neutral-400">
+                      <li>On-set feature film mentorship under Hemant Nilim Das.</li>
+                      <li>Hands-on shooting with RED/ARRI camera packages.</li>
+                      <li>Access to professional live sets, union crews, and actors.</li>
+                      <li>End-to-end post-production and 2026 global distribution routing.</li>
+                    </ul>
+                  </div>
 
-              <div className="space-y-3.5 border-t border-amber-500/10 pt-5">
-                <div className="flex items-start gap-2.5 text-xs text-neutral-200">
-                  <span className="text-amber-400 mt-0.5">✓</span>
-                  <span>Turned into a high-reach Social Media Creator with thousands of focused followers</span>
-                </div>
-                <div className="flex items-start gap-2.5 text-xs text-neutral-200">
-                  <span className="text-amber-400 mt-0.5">✓</span>
-                  <span>A Registered Private Limited company in your legal name as Managing Director</span>
-                </div>
-                <div className="flex items-start gap-2.5 text-xs text-neutral-200">
-                  <span className="text-amber-400 mt-0.5">✓</span>
-                  <span>1 Year of dedicated PR syndication targeting national news agencies</span>
+                  <div className="space-y-1">
+                    <p className="text-xs font-bold text-amber-400">25% — Direct Career Capital Reallocation (Included)</p>
+                    <ul className="list-disc pl-4 space-y-1 text-[11px] text-neutral-400">
+                      <li><strong>Legal Studio Setup:</strong> Incorporation of a Private Limited Company as Managing Director.</li>
+                      <li><strong>1-Year National PR:</strong> 12 months of media syndication targeting national news agencies.</li>
+                      <li><strong>Audience Building:</strong> Budget allocation to build a verified social media base.</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -160,9 +175,9 @@ export default function FilmfluencerThesis({
             {/* Dynamic Aspect Descriptions */}
             {simulatorAspect === "filmmaking" ? (
               <div className="mt-6 p-5 bg-neutral-900/60 rounded-xl border border-neutral-800/40 animate-fadeIn">
-                <h5 className="text-sm font-bold text-amber-400 uppercase tracking-wider mb-2">Aspect 1: Physical Actor Blocking &amp; Set Mechanics</h5>
+                <h5 className="text-sm font-bold text-amber-400 uppercase tracking-wider mb-2">Aspect 1: Directing, Cinematography &amp; Post-to-Distribution Workflow</h5>
                 <p className="text-xs text-neutral-300 leading-relaxed mb-4">
-                  Under direct staging instructions by Hemant Nilim Das, learn high-stakes film staging, psychological actor space, dynamic framing, and RED camera lens settings. You will practice blockings on professional sets instead of copying textbook theories.
+                  Under direct mentorship by Hemant Nilim Das, master core directing, RED/ARRI cinematography, and professional post-production while filming a real feature film. No other film school anywhere in the world offers this exclusive opportunity to gain real-world industry filmmaking opportunity.
                 </p>
                 <div className="grid grid-cols-2 gap-3 text-[11px] text-neutral-400 font-mono">
                   <span className="flex items-center gap-1.5"><span className="text-amber-500 font-bold">•</span> RED/Alexa Lab Hours: 350+</span>

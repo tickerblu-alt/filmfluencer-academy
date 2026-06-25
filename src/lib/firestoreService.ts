@@ -1,24 +1,10 @@
 import { 
-  db, 
-  collection, 
-  getDocs, 
-  addDoc, 
-  setDoc, 
-  doc, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  orderBy,
-  auth
-} from "../firebase";
-import { 
   MediaAsset, 
   AcademicCalendarEvent, 
   StudyCohort, 
   PvtLtdEntity, 
   FFANotification, 
   FFAUser,
-  Course,
   FFAActivityLog
 } from "../types";
 
@@ -48,304 +34,167 @@ export interface FirestoreErrorInfo {
   }
 }
 
-function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null): never {
-  const errInfo: FirestoreErrorInfo = {
-    error: error instanceof Error ? error.message : String(error),
-    authInfo: {
-      userId: auth.currentUser?.uid,
-      email: auth.currentUser?.email,
-      emailVerified: auth.currentUser?.emailVerified,
-      isAnonymous: auth.currentUser?.isAnonymous,
-      tenantId: auth.currentUser?.tenantId,
-      providerInfo: auth.currentUser?.providerData?.map(provider => ({
-        providerId: provider.providerId,
-        email: provider.email,
-      })) || []
-    },
-    operationType,
-    path
-  };
-  console.error('Firestore Error: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
+// Helper to get item from localStorage or initialize with mock data
+function getStoredItem<T>(key: string, defaultGenerator: () => T[]): T[] {
+  const stored = localStorage.getItem(key);
+  if (!stored) {
+    const defaultData = defaultGenerator();
+    localStorage.setItem(key, JSON.stringify(defaultData));
+    return defaultData;
+  }
+  try {
+    return JSON.parse(stored);
+  } catch (e) {
+    const defaultData = defaultGenerator();
+    localStorage.setItem(key, JSON.stringify(defaultData));
+    return defaultData;
+  }
 }
 
-function isPermissionError(err: any): boolean {
-  const msg = String(err?.message || err || "").toLowerCase();
-  return msg.includes("permission") || msg.includes("insufficient");
+function saveStoredItem<T>(key: string, data: T[]) {
+  localStorage.setItem(key, JSON.stringify(data));
 }
-
-// Dynamic Collections Names
-const COLLECTIONS = {
-  MEDIA: "ffa_media",
-  CALENDAR: "ffa_calendar",
-  COHORTS: "ffa_cohorts",
-  PVT_LTD: "ffa_pvt_ltd",
-  NOTIFICATIONS: "ffa_notifications",
-  USERS: "ffa_users",
-  ONLINE_COURSES: "ffa_online_courses",
-  ACTIVITY_LOGS: "ffa_activity_logs"
-};
 
 // 1. Core Media Assets (Images and Videos)
 export async function getMediaAssets(): Promise<MediaAsset[]> {
-  try {
-    const q = query(collection(db, COLLECTIONS.MEDIA), orderBy("createdAt", "desc"));
-    const snapshot = await getDocs(q);
-    const list: MediaAsset[] = [];
-    snapshot.forEach((d) => {
-      list.push({ id: d.id, ...d.data() } as MediaAsset);
-    });
-    return list;
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.LIST, COLLECTIONS.MEDIA);
-    }
-    console.warn("Firestore Media read failed, loading fallback local storage:", err);
-    const local = localStorage.getItem("ffa_cached_media");
-    return local ? JSON.parse(local) : getMockMedia();
-  }
+  return getStoredItem<MediaAsset>("ffa_simulated_media", getMockMedia);
 }
 
 export async function addMediaAsset(asset: Omit<MediaAsset, "id">): Promise<MediaAsset> {
-  try {
-    const docRef = await addDoc(collection(db, COLLECTIONS.MEDIA), asset);
-    const newAsset = { id: docRef.id, ...asset };
-    // update cache
-    const current = await getMediaAssets();
-    localStorage.setItem("ffa_cached_media", JSON.stringify([newAsset, ...current]));
-    return newAsset;
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.CREATE, COLLECTIONS.MEDIA);
-    }
-    console.error("Firestore write failed, saving locally:", err);
-    const mockId = "media_" + Math.random().toString(36).substr(2, 9);
-    const newAsset = { id: mockId, ...asset };
-    const local = localStorage.getItem("ffa_cached_media");
-    const current = local ? JSON.parse(local) : getMockMedia();
-    const updated = [newAsset, ...current];
-    localStorage.setItem("ffa_cached_media", JSON.stringify(updated));
-    return newAsset;
-  }
+  const media = getStoredItem<MediaAsset>("ffa_simulated_media", getMockMedia);
+  const newAsset: MediaAsset = {
+    ...asset,
+    id: "media_" + Math.random().toString(36).substr(2, 9)
+  };
+  media.unshift(newAsset);
+  saveStoredItem("ffa_simulated_media", media);
+  return newAsset;
 }
 
 export async function updateMediaAsset(id: string, updates: Partial<MediaAsset>): Promise<void> {
-  try {
-    const docRef = doc(db, COLLECTIONS.MEDIA, id);
-    await updateDoc(docRef, updates);
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.UPDATE, `${COLLECTIONS.MEDIA}/${id}`);
-    }
-    console.error("Firestore update failed, simulating locally:", err);
-    const local = localStorage.getItem("ffa_cached_media");
-    if (local) {
-      const current: MediaAsset[] = JSON.parse(local);
-      const updated = current.map(item => item.id === id ? { ...item, ...updates } : item);
-      localStorage.setItem("ffa_cached_media", JSON.stringify(updated));
-    }
-  }
+  const media = getStoredItem<MediaAsset>("ffa_simulated_media", getMockMedia);
+  const updated = media.map(item => item.id === id ? { ...item, ...updates } : item);
+  saveStoredItem("ffa_simulated_media", updated);
 }
 
-// 2. Academic Calendar
+// 2. Academic Calendar Events
 export async function getCalendarEvents(): Promise<AcademicCalendarEvent[]> {
-  try {
-    const q = query(collection(db, COLLECTIONS.CALENDAR), orderBy("date", "asc"));
-    const snapshot = await getDocs(q);
-    const list: AcademicCalendarEvent[] = [];
-    snapshot.forEach((d) => {
-      list.push({ id: d.id, ...d.data() } as AcademicCalendarEvent);
-    });
-    return list;
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.LIST, COLLECTIONS.CALENDAR);
-    }
-    console.warn("Firestore Calendar failed:", err);
-    const local = localStorage.getItem("ffa_cached_calendar");
-    return local ? JSON.parse(local) : getMockCalendar();
-  }
+  return getStoredItem<AcademicCalendarEvent>("ffa_simulated_calendar", getMockCalendar);
 }
 
 export async function addCalendarEvent(event: Omit<AcademicCalendarEvent, "id">): Promise<AcademicCalendarEvent> {
-  try {
-    const docRef = await addDoc(collection(db, COLLECTIONS.CALENDAR), event);
-    const newEvent = { id: docRef.id, ...event };
-    return newEvent;
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.CREATE, COLLECTIONS.CALENDAR);
-    }
-    const mockId = "evt_" + Math.random().toString(36).substr(2, 9);
-    const newEvent = { id: mockId, ...event };
-    const local = localStorage.getItem("ffa_cached_calendar");
-    const current = local ? JSON.parse(local) : getMockCalendar();
-    localStorage.setItem("ffa_cached_calendar", JSON.stringify([...current, newEvent]));
-    return newEvent;
-  }
+  const events = getStoredItem<AcademicCalendarEvent>("ffa_simulated_calendar", getMockCalendar);
+  const newEvent: AcademicCalendarEvent = {
+    ...event,
+    id: "evt_" + Math.random().toString(36).substr(2, 9)
+  };
+  events.push(newEvent);
+  saveStoredItem("ffa_simulated_calendar", events);
+  return newEvent;
 }
 
-// 3. Study Cohorts
+// 3. Study Cohorts (Frictionless Batches)
 export async function getStudyCohorts(): Promise<StudyCohort[]> {
-  try {
-    const snapshot = await getDocs(collection(db, COLLECTIONS.COHORTS));
-    const list: StudyCohort[] = [];
-    snapshot.forEach((d) => {
-      list.push({ id: d.id, ...d.data() } as StudyCohort);
-    });
-    return list;
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.LIST, COLLECTIONS.COHORTS);
-    }
-    const local = localStorage.getItem("ffa_cached_cohorts");
-    return local ? JSON.parse(local) : getMockCohorts();
-  }
+  return getStoredItem<StudyCohort>("ffa_simulated_cohorts", getMockCohorts);
 }
 
 export async function addStudyCohort(cohort: Omit<StudyCohort, "id">): Promise<StudyCohort> {
-  try {
-    const docRef = await addDoc(collection(db, COLLECTIONS.COHORTS), cohort);
-    return { id: docRef.id, ...cohort };
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.CREATE, COLLECTIONS.COHORTS);
-    }
-    const mockId = "cohort_" + Math.random().toString(36).substr(2, 9);
-    const newCohort = { id: mockId, ...cohort };
-    const local = localStorage.getItem("ffa_cached_cohorts");
-    const current = local ? JSON.parse(local) : getMockCohorts();
-    localStorage.setItem("ffa_cached_cohorts", JSON.stringify([...current, newCohort]));
-    return newCohort;
-  }
+  const cohorts = getStoredItem<StudyCohort>("ffa_simulated_cohorts", getMockCohorts);
+  const newCohort: StudyCohort = {
+    ...cohort,
+    id: "c_" + Math.random().toString(36).substr(2, 9)
+  };
+  cohorts.push(newCohort);
+  saveStoredItem("ffa_simulated_cohorts", cohorts);
+  return newCohort;
 }
 
-// 4. Pvt Ltd Joint Entities
+// 4. Pvt Ltd Incorporations
 export async function getPvtLtdEntities(): Promise<PvtLtdEntity[]> {
-  try {
-    const snapshot = await getDocs(collection(db, COLLECTIONS.PVT_LTD));
-    const list: PvtLtdEntity[] = [];
-    snapshot.forEach((d) => {
-      list.push({ id: d.id, ...d.data() } as PvtLtdEntity);
-    });
-    return list;
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.LIST, COLLECTIONS.PVT_LTD);
-    }
-    const local = localStorage.getItem("ffa_cached_pvt_ltd");
-    return local ? JSON.parse(local) : getMockPvtLtd();
-  }
+  return getStoredItem<PvtLtdEntity>("ffa_simulated_pvt_ltd", getMockPvtLtd);
 }
 
 export async function addPvtLtdEntity(entity: Omit<PvtLtdEntity, "id">): Promise<PvtLtdEntity> {
-  try {
-    const docRef = await addDoc(collection(db, COLLECTIONS.PVT_LTD), entity);
-    return { id: docRef.id, ...entity };
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.CREATE, COLLECTIONS.PVT_LTD);
-    }
-    const mockId = "pvt_" + Math.random().toString(36).substr(2, 9);
-    const newEntity = { id: mockId, ...entity };
-    const local = localStorage.getItem("ffa_cached_pvt_ltd");
-    const current = local ? JSON.parse(local) : getMockPvtLtd();
-    localStorage.setItem("ffa_cached_pvt_ltd", JSON.stringify([...current, newEntity]));
-    return newEntity;
-  }
+  const entities = getStoredItem<PvtLtdEntity>("ffa_simulated_pvt_ltd", getMockPvtLtd);
+  const newEntity: PvtLtdEntity = {
+    ...entity,
+    id: "p_" + Math.random().toString(36).substr(2, 9)
+  };
+  entities.push(newEntity);
+  saveStoredItem("ffa_simulated_pvt_ltd", entities);
+  return newEntity;
 }
 
 export async function updatePvtLtdStatus(id: string, status: PvtLtdEntity["status"], gst?: string): Promise<void> {
-  try {
-    const docRef = doc(db, COLLECTIONS.PVT_LTD, id);
-    await updateDoc(docRef, { status, ...(gst ? { gstNumber: gst } : {}) });
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.UPDATE, `${COLLECTIONS.PVT_LTD}/${id}`);
+  const entities = getStoredItem<PvtLtdEntity>("ffa_simulated_pvt_ltd", getMockPvtLtd);
+  const updated = entities.map(entity => {
+    if (entity.id === id) {
+      const u: Partial<PvtLtdEntity> = { status };
+      if (gst) u.gstNumber = gst;
+      return { ...entity, ...u };
     }
-    const local = localStorage.getItem("ffa_cached_pvt_ltd");
-    if (local) {
-      const current: PvtLtdEntity[] = JSON.parse(local);
-      const updated = current.map(item => item.id === id ? { ...item, status, ...(gst ? { gstNumber: gst } : {}) } : item);
-      localStorage.setItem("ffa_cached_pvt_ltd", JSON.stringify(updated));
-    }
-  }
+    return entity;
+  });
+  saveStoredItem("ffa_simulated_pvt_ltd", updated);
 }
 
-// 5. Notifications Feed
+// 5. Tuition Fee & Masterclass Notifications
 export async function getNotifications(): Promise<FFANotification[]> {
-  try {
-    const q = query(collection(db, COLLECTIONS.NOTIFICATIONS), orderBy("createdAt", "desc"));
-    const snapshot = await getDocs(q);
-    const list: FFANotification[] = [];
-    snapshot.forEach((d) => {
-      list.push({ id: d.id, ...d.data() } as FFANotification);
-    });
-    return list;
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.LIST, COLLECTIONS.NOTIFICATIONS);
-    }
-    const local = localStorage.getItem("ffa_cached_notifications");
-    return local ? JSON.parse(local) : getMockNotifications();
-  }
+  return getStoredItem<FFANotification>("ffa_simulated_notifications", getMockNotifications);
 }
 
 export async function sendNotification(notif: Omit<FFANotification, "id">): Promise<FFANotification> {
-  try {
-    const docRef = await addDoc(collection(db, COLLECTIONS.NOTIFICATIONS), notif);
-    return { id: docRef.id, ...notif };
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.CREATE, COLLECTIONS.NOTIFICATIONS);
-    }
-    const mockId = "notif_" + Math.random().toString(36).substr(2, 9);
-    const newNotif = { id: mockId, ...notif };
-    const local = localStorage.getItem("ffa_cached_notifications");
-    const current = local ? JSON.parse(local) : getMockNotifications();
-    localStorage.setItem("ffa_cached_notifications", JSON.stringify([newNotif, ...current]));
-    return newNotif;
-  }
+  const notifications = getStoredItem<FFANotification>("ffa_simulated_notifications", getMockNotifications);
+  const newNotif: FFANotification = {
+    ...notif,
+    id: "n_" + Math.random().toString(36).substr(2, 9)
+  };
+  notifications.unshift(newNotif);
+  saveStoredItem("ffa_simulated_notifications", notifications);
+  return newNotif;
 }
 
-// 6. Registered FFA Users for Auth
+// 6. Secure Student Accounts (Bypassed but kept for type compatibility)
 export async function registerUser(user: FFAUser): Promise<void> {
-  try {
-    await setDoc(doc(db, COLLECTIONS.USERS, user.id), user);
-  } catch (err) {
-    console.error("User doc register failed:", err);
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.WRITE, `${COLLECTIONS.USERS}/${user.id}`);
-    }
+  const users = getStoredItem<FFAUser>("ffa_simulated_users", () => []);
+  if (!users.some(u => u.email.toLowerCase() === user.email.toLowerCase())) {
+    users.push(user);
+    saveStoredItem("ffa_simulated_users", users);
   }
-  // Store session
   localStorage.setItem("ffa_logged_user", JSON.stringify(user));
 }
 
 export async function getUser(email: string): Promise<FFAUser | null> {
-  try {
-    const snapshot = await getDocs(collection(db, COLLECTIONS.USERS));
-    let found: FFAUser | null = null;
-    snapshot.forEach((d) => {
-      const u = d.data() as FFAUser;
-      if (u.email.toLowerCase() === email.toLowerCase()) {
-        found = { id: d.id, ...u };
-      }
-    });
-    return found;
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.LIST, COLLECTIONS.USERS);
+  const users = getStoredItem<FFAUser>("ffa_simulated_users", () => [
+    {
+      id: "mock_admin_id",
+      name: "Aarav Sharma",
+      email: "tickerblu@gmail.com",
+      role: "admin",
+      createdAt: new Date().toISOString()
     }
-    console.warn("Firestore User fetch failed, checking local database simulation...");
-    const localUsersStr = localStorage.getItem("ffa_simulated_users") || "[]";
-    const localUsers: FFAUser[] = JSON.parse(localUsersStr);
-    return localUsers.find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
-  }
+  ]);
+  return users.find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
 }
 
+// 7. Activity Logs
+export async function getActivityLogs(): Promise<FFAActivityLog[]> {
+  return getStoredItem<FFAActivityLog>("ffa_simulated_activity_logs", getMockActivityLogs);
+}
 
-// --- SMART FALLBACK MOCKS FOR PERFECT OFFLINE DURABILITY ---
+export async function logActivity(action: Omit<FFAActivityLog, "id" | "createdAt">): Promise<FFAActivityLog> {
+  const logs = getStoredItem<FFAActivityLog>("ffa_simulated_activity_logs", getMockActivityLogs);
+  const newLog: FFAActivityLog = {
+    ...action,
+    id: "log_" + Math.random().toString(36).substr(2, 9),
+    createdAt: new Date().toISOString()
+  };
+  logs.unshift(newLog);
+  saveStoredItem("ffa_simulated_activity_logs", logs);
+  return newLog;
+}
+
+// --- SMART FALLBACK MOCKS ---
 
 function getMockMedia(): MediaAsset[] {
   return [
@@ -461,52 +310,6 @@ function getMockNotifications(): FFANotification[] {
   ];
 }
 
-// 7. Activity Logs
-export async function getActivityLogs(): Promise<FFAActivityLog[]> {
-  try {
-    const q = query(collection(db, COLLECTIONS.ACTIVITY_LOGS), orderBy("createdAt", "desc"));
-    const snapshot = await getDocs(q);
-    const list: FFAActivityLog[] = [];
-    snapshot.forEach((d) => {
-      list.push({ id: d.id, ...d.data() } as FFAActivityLog);
-    });
-    return list;
-  } catch (err) {
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.LIST, COLLECTIONS.ACTIVITY_LOGS);
-    }
-    console.warn("Firestore Activity Logs failed, loading fallback local storage:", err);
-    const local = localStorage.getItem("ffa_cached_activity_logs");
-    return local ? JSON.parse(local) : getMockActivityLogs();
-  }
-}
-
-export async function logActivity(action: Omit<FFAActivityLog, "id" | "createdAt">): Promise<FFAActivityLog> {
-  const newAction = {
-    ...action,
-    createdAt: new Date().toISOString()
-  };
-  try {
-    const docRef = await addDoc(collection(db, COLLECTIONS.ACTIVITY_LOGS), newAction);
-    const logged = { id: docRef.id, ...newAction };
-    // Update local cache
-    const current = await getActivityLogs();
-    localStorage.setItem("ffa_cached_activity_logs", JSON.stringify([logged, ...current]));
-    return logged;
-  } catch (err) {
-    console.error("Firestore logActivity failed, saving locally:", err);
-    if (isPermissionError(err)) {
-      handleFirestoreError(err, OperationType.CREATE, COLLECTIONS.ACTIVITY_LOGS);
-    }
-    const mockId = "log_" + Math.random().toString(36).substr(2, 9);
-    const logged = { id: mockId, ...newAction };
-    const local = localStorage.getItem("ffa_cached_activity_logs");
-    const current = local ? JSON.parse(local) : getMockActivityLogs();
-    localStorage.setItem("ffa_cached_activity_logs", JSON.stringify([logged, ...current]));
-    return logged;
-  }
-}
-
 function getMockActivityLogs(): FFAActivityLog[] {
   return [
     {
@@ -519,4 +322,3 @@ function getMockActivityLogs(): FFAActivityLog[] {
     }
   ];
 }
-

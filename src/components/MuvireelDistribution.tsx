@@ -99,7 +99,7 @@ export default function MuvireelDistribution() {
             </h3>
 
             <p className="text-sm sm:text-base text-neutral-300 leading-relaxed font-sans pt-2">
-              Traditional social algorithms treat 5-star short films and basic viral comedy reels the same way. <strong className="text-white">MUVIREEL is different</strong>. Built specifically for Film Fluencers, MUVIREEL is a highly curated streaming app that feeds vertical-locked docus, micro-narratives, and cinematic concepts to dedicated film fans.
+              In a world dominated by cheap, hyper-active algorithm noise, <strong className="text-white">MUVIREEL is a pure cinematic sanctuary</strong>. Built exclusively to give Filmfluencer filmmakers absolute leverage, MUVIREEL is India&apos;s upcoming premium, high-fidelity vertical streaming theater. It allows you to publish cinematic micro-narratives, high-definition vertical films, and intense docus directly to thousands of paying patrons globally, bypassing traditional studio gatekeepers entirely.
             </p>
           </div>
 
@@ -108,39 +108,39 @@ export default function MuvireelDistribution() {
             <div className="p-5 bg-neutral-900/60 border border-neutral-850 rounded-2xl flex gap-3.5">
               <Shield className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-bold text-white mb-1">No Gatekeepers</h4>
-                <p className="text-xs text-neutral-400 leading-relaxed">Publish directly to our secure streaming gateway.</p>
+                <h4 className="text-sm font-bold text-white mb-1">Absolute Creative Independence</h4>
+                <p className="text-xs text-neutral-400 leading-relaxed">No producers, no censors, no compromise. Broadcast your raw vision directly to global patrons.</p>
               </div>
             </div>
 
             <div className="p-5 bg-neutral-900/60 border border-neutral-850 rounded-2xl flex gap-3.5">
               <Ticket className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-bold text-white mb-1">Premium Ticketing</h4>
-                <p className="text-xs text-neutral-400 leading-relaxed">Gate exclusive releases behind digital admissions.</p>
+                <h4 className="text-sm font-bold text-white mb-1">Micro-Theatrical Ticket Gating</h4>
+                <p className="text-xs text-neutral-400 leading-relaxed">Set your own entry fee. Gate premium releases behind high-yield, premium digital micro-tickets.</p>
               </div>
             </div>
 
             <div className="p-5 bg-neutral-900/60 border border-neutral-850 rounded-2xl flex gap-3.5">
               <Star className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-bold text-white mb-1">Stunning Bitrate Support</h4>
-                <p className="text-xs text-neutral-400 leading-relaxed">4K HDR playback tailored to preserve cinematic color grading.</p>
+                <h4 className="text-sm font-bold text-white mb-1">Lossless 4K HDR Atmos Streams</h4>
+                <p className="text-xs text-neutral-400 leading-relaxed">A pixel-perfect vertical frame with specialized color rendering to match your exact DaVinci Resolve grading.</p>
               </div>
             </div>
 
             <div className="p-5 bg-neutral-900/60 border border-neutral-850 rounded-2xl flex gap-3.5">
               <Radio className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-bold text-white mb-1">Graduation Broadcast</h4>
-                <p className="text-xs text-neutral-400 leading-relaxed">App cohorts get guaranteed front-page feature status.</p>
+                <h4 className="text-sm font-bold text-white mb-1">Prime Front-Page Spotlight</h4>
+                <p className="text-xs text-neutral-400 leading-relaxed">Our graduating cohort members receive guaranteed front-page premium placement and push alerts to 100K+ cinema lovers.</p>
               </div>
             </div>
           </div>
 
           <div className="p-5 bg-gradient-to-r from-red-950/20 to-amber-950/15 border border-red-500/20 rounded-2xl">
             <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans">
-              <strong>MUVIREEL Beta v1.4</strong> is exclusive to FFA Students. Our next cohort gets access to release up to three films with standard monetization features active.
+              <strong>MUVIREEL Beta v1.4</strong> is exclusive to FFA Students. Our upcoming premium cohort gets direct authorization keys to publish up to three original productions with instant monetized ticketing active.
             </p>
           </div>
         </div>

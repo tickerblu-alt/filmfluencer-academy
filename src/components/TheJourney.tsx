@@ -156,12 +156,27 @@ export default function TheJourney() {
             </div>
 
             {/* Redesigned High-End Elegant Serif & Display Title */}
-            <h3 className="text-4xl sm:text-5xl md:text-6xl font-normal font-serif text-white tracking-tight leading-[1.1]">
-              SMALL TOWN FISH TO<br />
-              <span className="text-sans font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-600 block sm:inline">
-                GLOBAL RECOGNITION.
-              </span>
-            </h3>
+            <div className="relative group/title mt-2">
+              {/* Subtle ambient gold background glow */}
+              <div className="absolute -inset-2 bg-gradient-to-r from-amber-500/10 to-transparent rounded-3xl blur-xl opacity-75 group-hover/title:opacity-100 transition-opacity duration-700 pointer-events-none" />
+              
+              <h3 className="relative text-3xl sm:text-4.5xl md:text-5.5xl font-light font-serif text-neutral-400 tracking-tight leading-[1.05] space-y-2">
+                <span className="block text-[11px] font-mono tracking-[0.35em] text-amber-500 uppercase font-extrabold mb-2">
+                  The Epic Transmutation
+                </span>
+                <span className="block text-white font-extrabold tracking-tight uppercase text-4xl sm:text-5xl md:text-6.5xl">
+                  SMALL TOWN FISH
+                </span>
+                <span className="inline-flex items-center gap-3">
+                  <span className="h-[1px] w-8 bg-amber-500/50" />
+                  <span className="text-xs font-mono tracking-[0.25em] text-neutral-500 uppercase italic font-medium">TO</span>
+                  <span className="h-[1px] w-8 bg-amber-500/50" />
+                </span>
+                <span className="block font-sans font-black text-4xl sm:text-5xl md:text-6.5xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 uppercase drop-shadow-[0_2px_10px_rgba(245,158,11,0.15)]">
+                  GLOBAL RECOGNITION
+                </span>
+              </h3>
+            </div>
           </div>
 
           {/* User's exact prompt-matching text block formatted with high-end luxury styling */}

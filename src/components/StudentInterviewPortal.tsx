@@ -174,7 +174,7 @@ Please present this certificate at the Andheri office to secure your ₹20,000 s
             Challenge the Selection Process
           </h4>
           <p className="text-xs text-neutral-400 mt-1">
-            Standard schools check certificates. Filmfluencers checks your artistic capacity.
+            Standard schools check certificates. Filmfluencer Academy checks your artistic capacity.
           </p>
         </div>
 
@@ -290,7 +290,7 @@ Please present this certificate at the Andheri office to secure your ₹20,000 s
             onClick={handleNextStep}
             className="w-full py-4 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold font-mono text-xs uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-red-600/10"
           >
-            Start Artistic Challenge <ChevronRight className="w-4 h-4" />
+            GET INVITED TO FAA <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       )}

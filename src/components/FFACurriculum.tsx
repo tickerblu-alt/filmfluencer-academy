@@ -1,10 +1,10 @@
 import React from "react";
-import { BookOpen, Calendar, Rocket, Target, Film, DollarSign, ArrowRight } from "lucide-react";
+import { BookOpen, Calendar, Rocket, Target, Film, DollarSign, ArrowRight, ArrowUp } from "lucide-react";
 import { Course } from "../types";
 
 interface FFACurriculumProps {
   courses: Course[];
-  onNavigateToDashboard: (initialTab?: string) => void;
+  onNavigateToDashboard?: (initialTab?: string) => void;
 }
 
 export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumProps) {
@@ -22,9 +22,9 @@ export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumPr
           </span>
         </div>
 
-        <h3 className="text-3xl sm:text-5xl font-bold font-display text-white tracking-tight leading-tight mb-4">
-          One Course. Two Skills.<br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">
+        <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-white tracking-tight leading-tight mb-4">
+          Paying the Fee Isn’t Enough—You Have to Get Selected.<br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200 text-2xl sm:text-3xl md:text-4xl">
             The Path to Directing Your Own Hindi Films.
           </span>
         </h3>
@@ -224,15 +224,31 @@ export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumPr
 
         {/* BOTTOM SUMMARY BLOCK */}
         <div className="mt-12 bg-neutral-900/40 border border-neutral-800 rounded-2xl p-6 text-center max-w-4xl mx-auto">
-          <p className="text-sm text-neutral-200 leading-relaxed font-sans mb-4">
+          <p className="text-sm text-neutral-200 leading-relaxed font-sans mb-6">
             <strong className="text-white">The bottom line:</strong> You aren&apos;t just learning to hold a camera. You&apos;re learning to own your career. One cohort. One year. <strong className="text-amber-400">Absolute industry leverage.</strong>
           </p>
-          <button 
-            onClick={() => onNavigateToDashboard("lessons")}
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-amber-500 text-black hover:bg-amber-400 text-xs font-bold uppercase font-mono tracking-wider rounded-lg transition-all cursor-pointer"
-          >
-            Enter Student Portal &amp; See Syllabus Materials <ArrowRight className="w-4 h-4" />
-          </button>
+
+          {/* Place 3: Cult Admissions Button decorated with elegance box and an arrow of hope above */}
+          <div className="flex flex-col items-center gap-2.5">
+            <div className="flex flex-col items-center animate-bounce duration-[2500ms]">
+              <span className="text-[9px] text-amber-500/80 font-mono tracking-[0.2em] uppercase mb-1">THE ARROW OF HOPE</span>
+              <ArrowUp className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+              <div className="w-[1px] h-3 bg-gradient-to-t from-amber-500/50 to-transparent mt-0.5" />
+            </div>
+            <a 
+              href="https://wa.me/919004221717?text=I%20want%20to%20Apply%20for%20Admission%20%26%20Reserve%20Seat%20at%20Filmfluencer%20Academy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3.5 px-7 py-3.5 border-2 border-amber-500/30 hover:border-amber-400 rounded-xl bg-neutral-950/80 text-neutral-300 hover:text-white transition-all duration-500 font-mono uppercase text-[11px] tracking-[0.25em] relative group overflow-hidden hover:shadow-[0_0_35px_rgba(245,158,11,0.15)] hover:scale-105"
+            >
+              <div className="absolute inset-0 w-full h-[1px] bg-gradient-to-r from-transparent via-amber-400/20 to-transparent top-0" />
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-60"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+              </span>
+              <span className="font-bold tracking-[0.22em] text-amber-400 group-hover:text-amber-300">Apply for Admission &amp; Reserve Seat</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>

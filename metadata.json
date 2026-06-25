@@ -1,6 +1,6 @@
 {
   "name": "Filmfluencer Academy",
-  "description": "Premium Film School landing page, Hemant Nilim Das portfolio, plus an integrated student dashboard for payment, profile, custom course streaming, progress tracking, and administrative enquiries.",
+  "description": "Premium Film School admissions landing page featuring Hemant Nilim Das's director portfolio, curriculum details, interactive tuition payment simulations, and direct enquiry submission.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

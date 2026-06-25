@@ -13,15 +13,18 @@ import {
   Globe, 
   CheckCircle,
   HelpCircle,
-  Eye
+  Eye,
+  ArrowUp,
+  FileDown
 } from "lucide-react";
 
 interface UltimateStudentYieldsProps {
-  onNavigateToDashboard: (initialTab?: string) => void;
+  onNavigateToDashboard?: (initialTab?: string) => void;
 }
 
 export default function UltimateStudentYields({ onNavigateToDashboard }: UltimateStudentYieldsProps) {
   const [activeYieldTab, setActiveYieldTab] = useState<string>("co-directing");
+  const [pdfActiveTab, setPdfActiveTab] = useState<string>("co-directing");
   const [showNotification, setShowNotification] = useState<string | null>(null);
 
   const handleVerifyCertificate = () => {
@@ -100,15 +103,27 @@ export default function UltimateStudentYields({ onNavigateToDashboard }: Ultimat
         </div>
 
         {/* Cormorant Garamond elegant serif title */}
-        <h3 className="text-4xl sm:text-5xl md:text-6xl font-normal font-serif text-white tracking-tight leading-[1.1] mb-6">
-          What You Graduate With
+        <h3 className="text-3xl sm:text-4xl md:text-5xl font-normal font-serif text-white tracking-tight leading-[1.1] mb-6 uppercase">
+          THE INDUSTRY BENEFITS OF THIS FILMFLUENCER COURSE
         </h3>
 
         <div className="w-16 h-[1px] bg-red-600/60 mx-auto mb-6" />
 
-        <p className="text-neutral-400 max-w-2xl mx-auto text-xs sm:text-sm font-mono uppercase tracking-widest leading-relaxed">
-          Most film schools drown you in theory libraries. Filmfluencer Academy focuses exclusively on practical assets you can invoice with.
-        </p>
+        <div className="flex justify-center mt-6">
+          <a
+            href="#know-process-button"
+            className="inline-flex items-center gap-3.5 px-8 py-4.5 rounded-2xl border border-amber-500/30 hover:border-amber-400 bg-neutral-950/80 hover:bg-neutral-950 text-neutral-200 hover:text-white transition-all duration-300 font-mono text-xs sm:text-sm uppercase tracking-widest leading-relaxed shadow-xl shadow-amber-500/5 hover:shadow-amber-500/10 group cursor-pointer max-w-xl mx-auto"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-60"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+            </span>
+            <span className="font-bold tracking-[0.18em] text-amber-400 group-hover:text-amber-300 text-center">
+              Know the process of being a branded filmmaker
+            </span>
+            <ArrowUp className="w-4 h-4 text-amber-400 group-hover:-translate-y-0.5 transition-transform shrink-0" />
+          </a>
+        </div>
       </div>
 
       {/* NEW HERO STAND-BY BANNER - STRIKING RED & CHARCOAL DESIGN */}
@@ -159,10 +174,17 @@ export default function UltimateStudentYields({ onNavigateToDashboard }: Ultimat
             {yieldCards.map((card) => {
               const isActive = activeYieldTab === card.id;
               return (
-                <button
+                <div
                   key={card.id}
                   onClick={() => setActiveYieldTab(card.id)}
-                  className={`p-5 rounded-2xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden group flex flex-col justify-between ${
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      setActiveYieldTab(card.id);
+                    }
+                  }}
+                  className={`p-5 rounded-2xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden group flex flex-col justify-between select-none ${
                     isActive
                       ? "bg-gradient-to-r from-[#1c0f0f]/45 to-black border-red-500/40 text-white shadow-xl shadow-red-500/[0.03]"
                       : "bg-neutral-900/40 border-neutral-900 hover:border-neutral-800 text-neutral-400"
@@ -209,13 +231,24 @@ export default function UltimateStudentYields({ onNavigateToDashboard }: Ultimat
                     <span className="text-neutral-500">
                       SYSTEM INTEGRATION REQUIRED
                     </span>
-                    <span className={`font-bold flex items-center gap-1 uppercase tracking-widest ${
-                      isActive ? "text-red-400" : "text-neutral-500 group-hover:text-red-400"
-                    }`}>
-                      EXPLORE DETAILS <ChevronRight className="w-3.5 h-3.5" />
-                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveYieldTab(card.id);
+                        setPdfActiveTab(card.id);
+                        const element = document.getElementById("prospectus-pdf");
+                        if (element) {
+                          element.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }}
+                      className={`font-bold flex items-center gap-1 uppercase tracking-widest cursor-pointer transition-all duration-200 py-1 px-2 rounded hover:bg-neutral-950 border border-transparent ${
+                        isActive ? "text-red-400 hover:text-red-300 hover:border-red-500/20" : "text-neutral-500 hover:text-red-400 group-hover:text-red-400"
+                      }`}
+                    >
+                      EXPLORE DETAILS <ChevronRight className="w-3.5 h-3.5 animate-pulse" />
+                    </button>
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>
@@ -282,12 +315,12 @@ export default function UltimateStudentYields({ onNavigateToDashboard }: Ultimat
                     ACCREDITED REGISTRATION: <span className="text-red-500 font-semibold">FFA-INC</span>
                   </div>
 
-                  <button
-                    onClick={() => onNavigateToDashboard("cohort")}
+                  <a
+                    href="#CourseFee"
                     className="py-3 px-5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-xs uppercase tracking-wider font-sans hover:scale-[1.02] transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-600/10 cursor-pointer shrink-0"
                   >
                     Lock Certificate Slots &rarr;
-                  </button>
+                  </a>
                 </div>
 
               </div>
@@ -372,6 +405,172 @@ export default function UltimateStudentYields({ onNavigateToDashboard }: Ultimat
             </div>
           </div>
 
+        </div>
+      </div>
+
+      {/* DYNAMIC SYLLABUS & PROSPECTUS PORTFOLIO INTERACTIVE CENTER */}
+      <div id="prospectus-pdf" className="mt-20 pt-16 border-t border-neutral-900/60 max-w-5xl mx-auto">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <span className="text-[10px] font-mono text-red-500 uppercase tracking-widest font-bold block mb-1">
+            OFFICIAL ACADEMY LEDGER
+          </span>
+          <h4 className="text-2xl sm:text-3xl font-bold font-display text-white">
+            Syllabus &amp; Prospectus Portfolio
+          </h4>
+          <p className="text-xs text-neutral-400 mt-2">
+            Click on any tract tab below to compile your legal physical-bound syllabus folder. Authenticated by Registrar node protocols.
+          </p>
+        </div>
+
+        {/* Tab Selectors */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {[
+            { id: "co-directing", label: "Co-Directing Syllabus", badge: "YIELD 01" },
+            { id: "private-banner", label: "Private Ltd. Incorporation", badge: "YIELD 02" },
+            { id: "ai-production", label: "AI 2026 Tech Stack", badge: "YIELD 03" }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setPdfActiveTab(tab.id)}
+              className={`px-4 py-2.5 rounded-xl border text-xs font-mono transition-all flex items-center gap-2 cursor-pointer ${
+                pdfActiveTab === tab.id
+                  ? "bg-red-950/40 border-red-500/30 text-white shadow-lg"
+                  : "bg-neutral-950/40 border-neutral-900 text-neutral-400 hover:text-white"
+              }`}
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${pdfActiveTab === tab.id ? "bg-red-500 animate-pulse" : "bg-neutral-600"}`} />
+              {tab.label}
+              <span className="text-[8px] opacity-60 font-sans px-1.5 py-0.2 rounded bg-neutral-900/80 border border-neutral-800">
+                {tab.badge}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        {/* Dynamic Editorial Document Preview */}
+        <div className="bg-[#09090b] border border-neutral-900 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+          {/* Subtle gold line accent */}
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/40 to-transparent" />
+          
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pb-6 border-b border-neutral-900 mb-6">
+            <div>
+              <div className="flex items-center gap-2 text-neutral-500 text-[10px] font-mono tracking-widest uppercase mb-1">
+                <span>DOC REG: ID-2026-FFA</span>
+                <span>•</span>
+                <span className="text-red-400 font-bold">VERIFIED COHORT PATHWAY</span>
+              </div>
+              <h5 className="text-xl font-bold font-display text-white">
+                {pdfActiveTab === "co-directing" && "TRACT 01: ACTIVE CO-DIRECTING CHRONOLOGY"}
+                {pdfActiveTab === "private-banner" && "TRACT 02: INCORPORATION & BRAND COMMERCIALIZATION"}
+                {pdfActiveTab === "ai-production" && "TRACT 03: THE 2026 GUERRILLA AI PRODUCTION BLUEPRINT"}
+              </h5>
+            </div>
+
+            <button
+              onClick={() => {
+                let text = "";
+                let fn = "";
+                if (pdfActiveTab === "co-directing") {
+                  fn = "FFA_CoDirecting_Syllabus.txt";
+                  text = "========================================================================\n           FILMFLUENCER ACADEMY (FFA) - CO-DIRECTING FEATURE FILM\n========================================================================\nCOHORT: 2026 DIRECT ENTRY BLUEPRINT\nDIRECTOR UNDER STUDY: HEMANT NILIM DAS\nACCREDITATION CODE: FFA-INC-CODIR-2026\n\nTHEORETICAL SILO DESTRUCTION DIRECTIVE:\nTraditional film schools trap you in a classroom for years, teaching you \nhow to hold a camera while you wait for a break that never comes. We don't \ndo that. You will co-direct a professional theatrical feature film within \n1 year, securing lifetime IMDB listings and commercial OTT access.\n\n12-MONTH CHRONOLOGICAL CURRICULUM OVERVIEW:\n------------------------------------------------------------------------\n[PHASE 01: STORY MATCHING & PAIR SELECTION]\nYou are paired based on thematic specialization (Neo-Noir, Suspense Drama, \nCommercial Rom-Com). Includes high-production screenwriting and structural \npacing masterclasses.\n\n[PHASE 02: ACTIVE DUAL SCREEN COMMANDS]\nLead actual high-budget camera sets under the direct command structure \nand active on-set mentorship of Hemant Nilim Das.\n\n[PHASE 03: MULTI-CHANNEL DISTRIBUTION SWEEP]\nGain live entry into regional theaters, global festival showcases (Cannes, \nTIFF, MAMI), and our proprietary MUVIREEL.COM vertical streaming catalog.\n\nGRADUATION SPECIFICATION:\n- Lifetime IMDB Co-Director / Co-Producer Certification\n- Placement in official MUVIREEL streaming channels\n- Directorship validation signed by Hemant Nilim Das\n========================================================================\nGenerated securely on the Filmfluencer Academy Ledger.";
+                } else if (pdfActiveTab === "private-banner") {
+                  fn = "FFA_PrivateLtd_Banner_Guide.txt";
+                  text = "========================================================================\n        FILMFLUENCER ACADEMY (FFA) - INCORPORATION & LEGAL GUIDE\n========================================================================\nREGISTRATION AUTHORITY: ROC Registrar (Govt of India Fast-Track)\nACCREDITATION CODE: FFA-INC-LEGAL-2026\n\nGRADUATION ASSET DESCRIPTION:\nA registered Indian Private Limited production firm incorporated in your \nown name. You graduate with an active, compliant incorporation license \nenabling you to:\n- Legally invoice global brands and commercial sponsors\n- Secure central and state government film production subsidies\n- Hold 100% copyright ownership of your intellectual property and films\n\nINCORPORATION WORKFLOW DETAILS:\n------------------------------------------------------------------------\n[STAGE 1: NAME APPROVAL]\nApplication of unique production names through the Ministry of Corporate \nAffairs (MCA) fast-track node.\n\n[STAGE 2: INCORPORATION & PAN/TAN]\nFiling of SPICe+ forms, drafting of Memorandum of Association (MoA) and \nArticles of Association (AoA) for digital cinema publishing.\n\n[STAGE 3: LIVE LEDGER ACTIVATION]\nSyncing your incorporated firm's registry parameters with active bank nodes \nfor immediate brand invoice capability.\n\nLEGAL BACKING:\nThis is a 100% legal fast-track registry seal. Physical gold-embossed \nincorporation documents are dispatched upon full cohort validation.\n========================================================================\nGenerated securely on the Filmfluencer Academy Ledger.";
+                } else {
+                  fn = "FFA_AI_Production_Blueprint.txt";
+                  text = "========================================================================\n        FILMFLUENCER ACADEMY (FFA) - AI PRODUCTION BLUEPRINT (2026)\n========================================================================\nENGINE WORKSPACE: GUERRILLA BUDGET OPTIMIZATION\nACCREDITATION CODE: FFA-INC-AI-2026\n\n2026 STACK SPECIFICATION:\nMaster the hyper-efficient tools to write pitch scripts, draft precise \nset budget breakdowns, design instant visual storyboards, and command \nautomated media networks. \n\nCURRICULUM MODULES:\n------------------------------------------------------------------------\n[MODULE 01: SCRIPT-TO-PERFORMANCE GENERATION]\nRapidly prompt and structure screenplays using highly localized custom \nLLM endpoints.\n\n[MODULE 02: VISUAL STORYBOARD ENGINE]\nDesign high-production mood boards and shot lists with real-time generative \nspatial layout software, eliminating expensive hand-drawn pre-visualization.\n\n[MODULE 03: AUTOMATED DISTRIBUTION NETWORKS]\nDirect-to-patron monetization pipelines with embedded digital-rights \nmanagement, optimized metadata, and viral vertical trailer automation.\n\nSYSTEM AUDIT PARAMETERS:\nVerified by vetting officer Hemant Nilim Das for 2026 production readiness.\n========================================================================\nGenerated securely on the Filmfluencer Academy Ledger.";
+                }
+                const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = fn;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className="px-4 py-2 bg-red-600 hover:bg-red-500 text-black font-semibold text-xs rounded-xl flex items-center gap-2 transition-all cursor-pointer select-none font-display shrink-0"
+            >
+              <FileDown className="w-4 h-4" /> DOWNLOAD OFFICIAL TEXT SYLLABUS (.TXT)
+            </button>
+          </div>
+
+          {/* Virtual Document Render */}
+          <div className="bg-black/40 border border-neutral-900 rounded-2xl p-6 font-mono text-[11px] sm:text-xs text-neutral-300 space-y-4 leading-relaxed max-h-[350px] overflow-y-auto custom-scrollbar relative">
+            <div className="absolute top-2 right-4 text-[9px] text-neutral-600 select-none">PAGE 01 OF 01</div>
+            
+            {pdfActiveTab === "co-directing" && (
+              <div className="space-y-4 animate-in fade-in duration-300">
+                <p className="text-red-400 font-bold">12-MONTH CHRONOLOGICAL CURRICULUM OVERVIEW:</p>
+                
+                <div className="border-l border-red-900/40 pl-3 py-1 space-y-2">
+                  <p><strong className="text-white font-semibold font-display">[PHASE 01: STORY MATCHING & PAIR SELECTION]</strong><br />
+                  You are paired based on thematic specialization (Neo-Noir Suspense, Commercial Drama, Thrillers). Master screenwriting hooks and physical structural pacing directly under mentor supervision.</p>
+                  
+                  <p><strong className="text-white font-semibold font-display">[PHASE 02: ACTIVE DUAL SCREEN COMMANDS]</strong><br />
+                  Lead actual high-budget camera sets. You dictate camera positions, block seasoned theater performers, and sign off on active production schedules on live Indian sets.</p>
+                  
+                  <p><strong className="text-white font-semibold font-display">[PHASE 03: MULTI-CHANNEL DISTRIBUTION SWEEP]</strong><br />
+                  Gain live entry into regional theaters, global festival showcases, and our proprietary MUVIREEL.COM vertical streaming catalog with immediate premium patron subscription links.</p>
+                </div>
+
+                <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-900 text-neutral-400">
+                  <span className="text-[10px] text-neutral-500 block uppercase font-bold tracking-wider">OFFICIAL GRADUATION TARGET:</span>
+                  - Lifetime certified Co-Director credentials uploaded directly to your IMDB profile.<br />
+                  - Registered distribution contract with verified vertical stream revenue distribution nodes.
+                </div>
+              </div>
+            )}
+
+            {pdfActiveTab === "private-banner" && (
+              <div className="space-y-4 animate-in fade-in duration-300">
+                <p className="text-red-400 font-bold">INCORPORATION WORKFLOW DETAILS:</p>
+                
+                <div className="border-l border-red-900/40 pl-3 py-1 space-y-2">
+                  <p><strong className="text-white font-semibold font-display">[STAGE 1: MCA NAME APPROVAL & RESERVATION]</strong><br />
+                  Fast-tracked name filings submitted securely through Ministry of Corporate Affairs portals. Secure a legal, trademarkable title for your production company.</p>
+                  
+                  <p><strong className="text-white font-semibold font-display">[STAGE 2: CORPORATE CONSTITUTION FILINGS]</strong><br />
+                  Drafting customized Articles of Association (AoA) and Memorandum of Association (MoA) explicitly configured for international film production, global syndication rights, and B2B streaming models.</p>
+                  
+                  <p><strong className="text-white font-semibold font-display">[STAGE 3: ACTIVE TAXATION NODES]</strong><br />
+                  Automatic integration of PAN/TAN registries. Walk out on day one with a fully functioning current account structure, certified corporate seal, and immediate brand invoice capability.</p>
+                </div>
+
+                <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-900 text-neutral-400">
+                  <span className="text-[10px] text-neutral-500 block uppercase font-bold tracking-wider">LEGAL SEALS:</span>
+                  - Authenticated ROC Ministry Seal registration.<br />
+                  - 100% sole equity holding under your direct name. No administrative proxies.
+                </div>
+              </div>
+            )}
+
+            {pdfActiveTab === "ai-production" && (
+              <div className="space-y-4 animate-in fade-in duration-300">
+                <p className="text-red-400 font-bold">THE 2026 GUERRILLA STACK BLUEPRINT:</p>
+                
+                <div className="border-l border-red-900/40 pl-3 py-1 space-y-2">
+                  <p><strong className="text-white font-semibold font-display">[MODULE 01: SCRIPT-TO-PERFORMANCE GENERATION]</strong><br />
+                  Leverage high-context custom LLM models optimized with Indian dialogue sets to format scripts, produce multi-character pitches, and auto-generate comprehensive location shoot lists.</p>
+                  
+                  <p><strong className="text-white font-semibold font-display">[MODULE 02: PRE-VISUALIZATION ENGINE]</strong><br />
+                  Eliminate expensive hand-drawn concept art. Master state-of-the-art spatial image engines to construct mood boards, lighting directions, and complex multi-cam angles instantly.</p>
+                  
+                  <p><strong className="text-white font-semibold font-display">[MODULE 03: META-DISTRIBUTION NODES]</strong><br />
+                  Utilize serverless web automation nodes to syndicate trailer formats, automate viral tiktok/reel micro-cuts, and maintain automated licensing tables directly with platform distributors.</p>
+                </div>
+
+                <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-900 text-neutral-400">
+                  <span className="text-[10px] text-neutral-500 block uppercase font-bold tracking-wider">AUDIT STATUS:</span>
+                  Verified for deployment on active 2026 regional shoots. Optimized for zero-interest production structures.
+                </div>
+              </div>
+            )}
+            
+            <div className="border-t border-neutral-900 pt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-[10px] text-neutral-500 font-sans">
+              <div>VETTED BY FACULTY DIRECTOR: <span className="text-neutral-300">HEMANT NILIM DAS</span></div>
+              <div>ACCREDITATION LEDGER ID: <span className="font-mono text-red-500">#FFA-MUM-YIELD-PRO</span></div>
+            </div>
+          </div>
         </div>
       </div>
 

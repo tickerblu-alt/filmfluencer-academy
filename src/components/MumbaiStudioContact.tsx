@@ -21,7 +21,7 @@ const cameraImg = "/src/assets/images/mumbai_film_school_camera_1782160590737.jp
 const suiteImg = "/src/assets/images/mumbai_film_school_suite_1782160604476.jpg";
 
 interface MumbaiStudioContactProps {
-  onNavigateToDashboard: (initialTab?: string) => void;
+  onNavigateToDashboard?: (initialTab?: string) => void;
 }
 
 interface CustomStudioImage {
@@ -35,6 +35,48 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
   const [studioImages, setStudioImages] = useState<CustomStudioImage[]>([]);
   const [captionInput, setCaptionInput] = useState("");
   const [feedback, setFeedback] = useState("");
+
+  // States for custom main stage and suite images
+  const [customCameraImg, setCustomCameraImg] = useState<string>(() => {
+    return localStorage.getItem("ffa_custom_camera_img") || cameraImg;
+  });
+  const [customSuiteImg, setCustomSuiteImg] = useState<string>(() => {
+    return localStorage.getItem("ffa_custom_suite_img") || suiteImg;
+  });
+
+  const handleCameraImgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      setCustomCameraImg(dataUrl);
+      localStorage.setItem("ffa_custom_camera_img", dataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSuiteImgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      setCustomSuiteImg(dataUrl);
+      localStorage.setItem("ffa_custom_suite_img", dataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleCameraImgReset = () => {
+    setCustomCameraImg(cameraImg);
+    localStorage.removeItem("ffa_custom_camera_img");
+  };
+
+  const handleSuiteImgReset = () => {
+    setCustomSuiteImg(suiteImg);
+    localStorage.removeItem("ffa_custom_suite_img");
+  };
 
   // Load custom uploaded images from localStorage
   useEffect(() => {
@@ -145,7 +187,7 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
             {/* Visual Red Overlay Glow */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 z-10" />
             <img 
-              src={cameraImg} 
+              src={customCameraImg} 
               alt="Posh Mumbai Film School Camera Stage"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -154,6 +196,27 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
             {/* Floating indicator */}
             <div className="absolute top-4 left-4 z-20 px-3 py-1 bg-red-650 font-bold bg-red-950/90 border border-red-500/40 text-red-400 text-[10px] font-mono rounded uppercase tracking-wider">
               STAGE 01: ARRI ALEXA PRESETS
+            </div>
+
+            {/* Hover Actions overlay */}
+            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 flex flex-col items-center justify-center gap-3">
+              <label className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded text-xs font-mono font-bold tracking-wider uppercase cursor-pointer transition-all shadow-lg shadow-red-600/25">
+                Uplink Real Photo
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleCameraImgUpload} 
+                  className="hidden" 
+                />
+              </label>
+              {customCameraImg !== cameraImg && (
+                <button 
+                  onClick={handleCameraImgReset}
+                  className="px-4 py-2 bg-neutral-900 hover:bg-neutral-850 text-neutral-400 hover:text-white rounded text-xs font-mono font-bold tracking-wider uppercase transition-all"
+                >
+                  Reset Default
+                </button>
+              )}
             </div>
           </div>
 
@@ -184,7 +247,7 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
             {/* Visual Amber/Red overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 z-10" />
             <img 
-              src={suiteImg} 
+              src={customSuiteImg} 
               alt="Luxury Film Grading Suite Mumbai"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -193,6 +256,27 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
             {/* Floating indicator */}
             <div className="absolute top-4 left-4 z-20 px-3 py-1 bg-neutral-950/90 border border-neutral-800 text-neutral-400 text-[10px] font-mono rounded uppercase tracking-wider">
               SUITE B: COLOR LAB &amp; DOLBY MIXING
+            </div>
+
+            {/* Hover Actions overlay */}
+            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 flex flex-col items-center justify-center gap-3">
+              <label className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded text-xs font-mono font-bold tracking-wider uppercase cursor-pointer transition-all shadow-lg shadow-red-600/25">
+                Uplink Real Photo
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleSuiteImgUpload} 
+                  className="hidden" 
+                />
+              </label>
+              {customSuiteImg !== suiteImg && (
+                <button 
+                  onClick={handleSuiteImgReset}
+                  className="px-4 py-2 bg-neutral-900 hover:bg-neutral-850 text-neutral-400 hover:text-white rounded text-xs font-mono font-bold tracking-wider uppercase transition-all"
+                >
+                  Reset Default
+                </button>
+              )}
             </div>
           </div>
 
@@ -342,7 +426,7 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
               <div className="flex gap-3 items-start text-neutral-250">
                 <MapPin className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
                 <span>
-                  <strong>Filmfluencers Corporate Studio:</strong><br />
+                  <strong>Filmfluencer Corporate Studio:</strong><br />
                   Muvireel Studio Spaces, Suite 302, 3rd Floor, Link Plaza Building, Next to Infiniti Mall, Andheri (West), Mumbai - 400053, Maharashtra, India.
                 </span>
               </div>
@@ -407,46 +491,7 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
 
       </div>
 
-      {/* FOOTNOTE SECTION (FOR ALL BUTTONS, ADDRESS, REGISTRATION STUFFS) */}
-      <div id="footnotes" className="bg-[#050506] border border-neutral-900 p-8 rounded-2xl max-w-6xl mx-auto space-y-6 relative overflow-hidden">
-        <div className="flex items-center gap-2 border-b border-neutral-900 pb-3">
-          <Info className="w-4 h-4 text-red-500" />
-          <span className="text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
-            OFFICIAL REGISTRAR &amp; STUDENT BUTTON DEEPLINK FOOTNOTES
-          </span>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-[10.5px] font-mono text-neutral-500 leading-relaxed">
-          <div className="space-y-3">
-            <p>
-              <strong className="text-neutral-300">Section 1.1 / &ldquo;Enter Student Streaming Hub&rdquo; &amp; Portal Buttons:</strong> Access credentials and interactive simulated cohort pipelines are stored securely in local app storage. Active students gain access keys to our exclusive database nodes instantly upon admission registry verification.
-            </p>
-            <p>
-              <strong className="text-neutral-300">Section 1.2 / &ldquo;Book Seat&rdquo; &amp; &ldquo;Process Seat Booking fee&rdquo;:</strong> The onboarding seat reservation fee of ₹20,000 operates under strict guidelines of Muvireel Private Limited and Filmfluencer Academy. Fees are fully secured and legally eligible for direct credit transfer toward full tuition and equipment allocations.
-            </p>
-            <p>
-              <strong className="text-neutral-300">Section 1.3 / &ldquo;Co-Directing Seat Placement&rdquo;:</strong> Direct deployment as Co-Director or Assistant Coordinator on are active professional theatrical feature streams is legally registered in student portfolios only after fulfillment of 85% attendance, visual blocking reviews, and script approval matrices.
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <p>
-              <strong className="text-neutral-300">Section 2.1 / &ldquo;Register Client Partner Live&rdquo;:</strong> Branding metrics, logo simulation engines, and portfolio uploads are local utilities configured exclusively for live rendering tests. Custom uploaded assets remain under local context and do not alter legal copyright titles of the respective brands.
-            </p>
-            <p>
-              <strong className="text-neutral-300">Section 2.2 / Registrar of Companies (ROC) &amp; Private Limited Banner:</strong> The guaranteed Private Limited production banner is fast-tracked and registered legally under the rules of the MCA (Ministry of Corporate Affairs, Government of India), providing lifelong commercial invoicing structures.
-            </p>
-            <p>
-              <strong className="text-neutral-300">Section 2.3 / IMDB &amp; Filmfluencer Badges:</strong> Physical gold-foil credentials and verified IMDB listing structures are issued in partnership with regional distributors and are strictly copyrighted. All rights reserved &copy; 2026 Filmfluencer Academy. Registered Office: Andheri West, Mumbai, India.
-            </p>
-          </div>
-        </div>
-
-        <div className="pt-4 border-t border-neutral-900 flex justify-between items-center text-[9px] text-neutral-600 font-mono flex-wrap gap-2">
-          <span>COGNIZANT ACT REF: #FFA-MUM-2026-REG</span>
-          <span>APPROVED BY BOARD OF DIRECTORS • GLOBAL SYNDICATE</span>
-        </div>
-      </div>
 
     </section>
   );

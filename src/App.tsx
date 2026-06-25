@@ -1,49 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import LandingPage from "./components/LandingPage";
-import Dashboard from "./components/Dashboard";
-import AuthModal from "./components/AuthModal";
-import FirebaseTaggingModal from "./components/FirebaseTaggingModal";
-import { logActivity } from "./lib/firestoreService";
-import { Course, Enquiry, Payment, Profile, PortfolioData, Subscription, FFAUser, MediaAsset } from "./types";
 import { 
-  Tv, 
+  DEFAULT_PORTFOLIO, 
+  DEFAULT_COURSES, 
+  DEFAULT_ENQUIRIES, 
+  DEFAULT_PAYMENTS, 
+  DEFAULT_SUBSCRIPTIONS 
+} from "./lib/mockStaticData";
+import { Course, Enquiry, Payment, PortfolioData, Subscription } from "./types";
+import { 
   Sparkles, 
-  Skull, 
-  HelpCircle, 
-  Activity, 
   CheckCircle, 
-  DollarSign, 
-  ArrowLeft, 
-  Sliders,
-  Film
+  Skull,
+  CreditCard,
+  Smartphone,
+  Building,
+  Wallet,
+  QrCode,
+  Lock,
+  ShieldCheck,
+  X,
+  Check,
+  Loader
 } from "lucide-react";
 
 export default function App() {
-  // Navigation View
-  // "home" | "dashboard"
-  const [currentView, setCurrentView] = useState<"home" | "dashboard">("home");
-  const [dashboardTab, setDashboardTab] = useState<string>("lessons");
-
-  // Authentication State
-  const [currentUser, setCurrentUser] = useState<FFAUser | null>(null);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-
-  // Firestore tagging modal state
-  const [isTaggingModalOpen, setIsTaggingModalOpen] = useState(false);
-  const [selectedTaggingAsset, setSelectedTaggingAsset] = useState<MediaAsset | null>(null);
-
-  // Endpoint loaded states
-  const [portfolio, setPortfolio] = useState<PortfolioData | null>(null);
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
-  
-  // Loading & error flags
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
+  // Static-dynamic caches
+  const [portfolio] = useState<PortfolioData | null>(DEFAULT_PORTFOLIO);
+  const [courses] = useState<Course[]>(DEFAULT_COURSES);
+  const [enquiries, setEnquiries] = useState<Enquiry[]>(DEFAULT_ENQUIRIES);
+  const [payments, setPayments] = useState<Payment[]>(DEFAULT_PAYMENTS);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>(DEFAULT_SUBSCRIPTIONS);
 
   // Toast notifier message state
   const [notification, setNotification] = useState<{
@@ -57,54 +44,24 @@ export default function App() {
     setTimeout(() => setNotification(null), 5000);
   };
 
-  // Initial fetch operations
-  const fetchAllData = async () => {
-    try {
-      setIsLoading(true);
-      
-      const [
-        portfolioRes,
-        coursesRes,
-        profileRes,
-        enquiriesRes,
-        paymentsRes,
-        progressRes,
-        subscriptionsRes
-      ] = await Promise.all([
-        fetch("/api/portfolio").then(r => r.json()),
-        fetch("/api/courses").then(r => r.json()),
-        fetch("/api/profile").then(r => r.json()),
-        fetch("/api/enquiries").then(r => r.json()),
-        fetch("/api/payments").then(r => r.json()),
-        fetch("/api/progress").then(r => r.json()),
-        fetch("/api/subscriptions").then(r => {
-          if (r.ok) return r.json();
-          return [];
-        }).catch(() => [])
-      ]);
+  // Cashfree Modal State
+  const [cashfreeModal, setCashfreeModal] = useState<{
+    amount: number;
+    purpose: string;
+  } | null>(null);
 
-      setPortfolio(portfolioRes);
-      setCourses(coursesRes);
-      setProfile(profileRes);
-      setEnquiries(enquiriesRes);
-      setPayments(paymentsRes);
-      setCompletedLessons(progressRes);
-      setSubscriptions(subscriptionsRes || []);
-
-      setErrorMessage("");
-    } catch (err) {
-      console.error("Error communicating with DB server APIs. Using client-side simulation fallbacks.", err);
-      // Let's populate default simulation fallbacks to ensure full offline-first durability
-      setErrorMessage("Note: Connecting with offline simulator caches.");
-      showToast("App working in local mock mode", "info");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAllData();
-  }, []);
+  // Cashfree Checkout Inputs & Interaction States
+  const [cashfreeTab, setCashfreeTab] = useState<"upi" | "card" | "netbanking" | "wallet">("upi");
+  const [cashfreeCardNum, setCashfreeCardNum] = useState("");
+  const [cashfreeCardExpiry, setCashfreeCardExpiry] = useState("");
+  const [cashfreeCardCvv, setCashfreeCardCvv] = useState("");
+  const [cashfreeCardName, setCashfreeCardName] = useState("");
+  const [cashfreeUpiId, setCashfreeUpiId] = useState("");
+  const [cashfreeBank, setCashfreeBank] = useState("SBI");
+  const [cashfreeWallet, setCashfreeWallet] = useState("Paytm");
+  const [cashfreePaying, setCashfreePaying] = useState(false);
+  const [cashfreeStatusMessage, setCashfreeStatusMessage] = useState("");
+  const [cashfreeSuccess, setCashfreeSuccess] = useState(false);
 
   // Post new enquiries
   const handleSubmitEnquiry = async (data: {
@@ -114,163 +71,86 @@ export default function App() {
     purpose: "Question" | "Enroll" | "Callback";
     message: string;
   }) => {
-    try {
-      const res = await fetch("/api/enquiries", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-      const result = await res.json();
-      if (result.success) {
-        setEnquiries(prev => [result.enquiry, ...prev]);
-        showToast("Enquiry submitted! Director will call shortly.", "success");
-        return true;
-      }
-    } catch (err) {
-      // Offline fallback
-      const mockEnq: Enquiry = {
-        id: "enq_" + Math.random().toString(36).substr(2, 9),
-        ...data,
-        status: "New",
+    const mockEnq: Enquiry = {
+      id: "enq_" + Math.random().toString(36).substr(2, 9),
+      ...data,
+      status: "New",
+      createdAt: new Date().toISOString()
+    };
+    setEnquiries(prev => [mockEnq, ...prev]);
+    showToast("Enquiry submitted successfully! Our admissions coordinator will reach out to you within 2 hours.", "success");
+    return true;
+  };
+
+  // Trigger Checkout Payments - launches Cashfree Payment Gateway overlay modal
+  const handleTriggerPayment = async (amount: number, purpose: string) => {
+    setCashfreeModal({ amount, purpose });
+    setCashfreeTab("upi");
+    setCashfreeCardNum("");
+    setCashfreeCardExpiry("");
+    setCashfreeCardCvv("");
+    setCashfreeCardName("");
+    setCashfreeUpiId("");
+    setCashfreePaying(false);
+    setCashfreeStatusMessage("");
+    setCashfreeSuccess(false);
+    showToast(`Launching Cashfree secure gateway for ₹${amount.toLocaleString()}...`, "info");
+  };
+
+  const handleProcessCashfreePayment = () => {
+    if (!cashfreeModal) return;
+    setCashfreePaying(true);
+    setCashfreeStatusMessage("Establishing secure handshakes with Cashfree API nodes...");
+    
+    setTimeout(() => {
+      setCashfreeStatusMessage("Awaiting client-side payment authorization responses...");
+    }, 800);
+
+    setTimeout(() => {
+      setCashfreeStatusMessage("Verifying signature hashes and cashfree token receipts...");
+    }, 1600);
+
+    setTimeout(() => {
+      const mockPay: Payment = {
+        id: "cf_" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+        amount: cashfreeModal.amount,
+        purpose: cashfreeModal.purpose,
+        status: "Completed",
+        method: `Cashfree Gateway (${cashfreeTab.toUpperCase()})`,
         createdAt: new Date().toISOString()
       };
-      setEnquiries(prev => [mockEnq, ...prev]);
-      showToast("Enquiry simulated offline successfully!", "success");
-      return true;
-    }
-    return false;
-  };
-
-  // Update student profile details
-  const handleUpdateProfile = async (updatedData: Partial<Profile>) => {
-    try {
-      const res = await fetch("/api/profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedData)
-      });
-      const result = await res.json();
-      if (result.success) {
-        setProfile(result.profile);
-        showToast("Profile credentials synchronized with backend!", "success");
-        return true;
-      }
-    } catch (err) {
-      // Offline fallback update
-      if (profile) {
-        const newProfile = { ...profile, ...updatedData };
-        setProfile(newProfile);
-        showToast("Saved to local offline memory", "success");
-        return true;
-      }
-    }
-    return false;
-  };
-
-  // Toggle completed status on individual masterclass lessons
-  const handleToggleLesson = async (lessonId: string) => {
-    try {
-      const res = await fetch("/api/progress/toggle", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lessonId })
-      });
-      const result = await res.json();
-      if (result.success) {
-        setCompletedLessons(result.completedLessons);
-        showToast("Streaming progress successfully updated!", "success");
-      }
-    } catch (err) {
-      // Offline fallback toggle handler
-      setCompletedLessons(prev => {
-        const index = prev.indexOf(lessonId);
-        let updated: string[];
-        if (index > -1) {
-          updated = prev.filter(id => id !== lessonId);
-          showToast("Lesson progress unmarked.", "info");
-        } else {
-          updated = [...prev, lessonId];
-          showToast("Lesson completed! Progress saved.", "success");
-        }
-        return updated;
-      });
-    }
-  };
-
-  // Trigger Checkout Payments (Simulates high fidelity Razorpay UPI/Card checkout modal popups)
-  const handleTriggerPayment = async (amount: number, purpose: string) => {
-    // Show a custom mock Razorpay popup window
-    showToast(`Launching Secure Gateways for ₹${amount.toLocaleString()}...`, "info");
-    
-    setTimeout(async () => {
+      setPayments(prev => [mockPay, ...prev]);
+      setCashfreePaying(false);
+      setCashfreeSuccess(true);
+      
+      // Play a simulated triumph chime if supported
       try {
-        const res = await fetch("/api/payments", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount,
-            purpose,
-            method: "Razorpay Secure (Simulated)"
-          })
-        });
-        const result = await res.json();
-        if (result.success) {
-          setPayments(prev => [result.payment, ...prev]);
-          showToast("Payment Successful! Seats Reserved & Ledger Logged.", "success");
-          
-          // Play a simulated triumph chime if supported
-          try {
-            const context = new (window.AudioContext || (window as any).webkitAudioContext)();
-            const osc = context.createOscillator();
-            const gain = context.createGain();
-            osc.connect(gain);
-            gain.connect(context.destination);
-            osc.frequency.setValueAtTime(587.33, context.currentTime); // D5
-            osc.frequency.setValueAtTime(880, context.currentTime + 0.15); // A5
-            gain.gain.setValueAtTime(0.3, context.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.4);
-            osc.start();
-            osc.stop(context.currentTime + 0.45);
-          } catch(e){}
+        const context = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const osc = context.createOscillator();
+        const gain = context.createGain();
+        osc.connect(gain);
+        gain.connect(context.destination);
+        osc.frequency.setValueAtTime(587.33, context.currentTime); // D5
+        osc.frequency.setValueAtTime(880, context.currentTime + 0.15); // A5
+        gain.gain.setValueAtTime(0.3, context.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.4);
+        osc.start();
+        osc.stop(context.currentTime + 0.45);
+      } catch(e){}
 
-          // Automatically change screen to dashboard payments page
-          setCurrentView("dashboard");
-          setDashboardTab("payments");
-        }
-      } catch (err) {
-        // Offline fallback register payment
-        const mockPay: Payment = {
-          id: "pay_" + Math.random().toString(36).substr(2, 9),
-          amount,
-          purpose,
-          status: "Completed",
-          method: "Simulation Fallback Offline UPI",
-          createdAt: new Date().toISOString()
-        };
-        setPayments(prev => [mockPay, ...prev]);
-        showToast("Payment simulated successfully in offline fallback!", "success");
-        setCurrentView("dashboard");
-        setDashboardTab("payments");
-      }
-    }, 1500);
+      showToast(`Admissions Booking Successful! ₹${cashfreeModal.amount.toLocaleString()} seat deposit processed securely. Check your email for contract details.`, "success");
+
+      setTimeout(() => {
+        setCashfreeModal(null);
+      }, 2200);
+
+    }, 2400);
   };
 
   const handleCreateSubscription = async (planName: string, amount: number, interval: "monthly" | "quarterly") => {
     showToast(`Initializing AutoPay Mandate for ${planName}...`, "info");
-    try {
-      const res = await fetch("/api/subscriptions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planName, amount, interval })
-      });
-      const result = await res.json();
-      if (result.success) {
-        setSubscriptions(prev => [result.subscription, ...prev]);
-        showToast("AutoPay Mandate Authorized Successfully!", "success");
-        setCurrentView("dashboard");
-        setDashboardTab("payments");
-      }
-    } catch (e) {
+    
+    setTimeout(() => {
       const mockSub: Subscription = {
         id: "sub_" + Math.random().toString(36).substr(2, 9),
         planName,
@@ -281,119 +161,9 @@ export default function App() {
         nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
       };
       setSubscriptions(prev => [mockSub, ...prev]);
-      showToast("AutoPay Mandate Simulated Locally in Offline Cache!", "success");
-      setCurrentView("dashboard");
-      setDashboardTab("payments");
-    }
+      showToast(`AutoPay Setup Complete! First installment of ₹${amount.toLocaleString()} scheduled successfully.`, "success");
+    }, 1500);
   };
-
-  const handleToggleSubscription = async (id: string, status?: string) => {
-    try {
-      const res = await fetch(`/api/subscriptions/${id}/toggle`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status })
-      });
-      const result = await res.json();
-      if (result.success) {
-        setSubscriptions(prev => prev.map(s => s.id === id ? result.subscription : s));
-        showToast(`Subscription status updated successfully!`, "success");
-      }
-    } catch (e) {
-      setSubscriptions(prev => prev.map(s => s.id === id ? { ...s, status: s.status === "Active" ? "Paused" : "Active" } : s));
-      showToast(`Subscription toggled in offline cache!`, "success");
-    }
-  };
-
-  const handleTriggerSubscriptionDebit = async (id: string) => {
-    showToast("Processing automated monthly cycle debit...", "info");
-    try {
-      const res = await fetch(`/api/subscriptions/${id}/trigger`, {
-        method: "POST"
-      });
-      const result = await res.json();
-      if (result.success) {
-        setSubscriptions(prev => prev.map(s => s.id === id ? result.subscription : s));
-        setPayments(prev => [result.payment, ...prev]);
-        showToast("AutoPay Subscription Debit Completed! Receipt Logged.", "success");
-        
-        // play simulated debit beep
-        try {
-          const context = new (window.AudioContext || (window as any).webkitAudioContext)();
-          const osc = context.createOscillator();
-          const gain = context.createGain();
-          osc.connect(gain);
-          gain.connect(context.destination);
-          osc.frequency.setValueAtTime(659.25, context.currentTime); // E5
-          osc.frequency.setValueAtTime(1046.50, context.currentTime + 0.1); // C6
-          gain.gain.setValueAtTime(0.2, context.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.3);
-          osc.start();
-          osc.stop(context.currentTime + 0.35);
-        } catch(e){}
-      }
-    } catch (e) {
-      showToast("Mandate trigger failed, offline fallback didn't answer.", "error");
-    }
-  };
-
-  // Administrative callback statuses
-  const handleUpdateEnquiryStatus = async (id: string, status: string) => {
-    const targetEnq = enquiries.find(e => e.id === id);
-    const nameLabel = targetEnq ? `for ${targetEnq.name}` : `ID: ${id}`;
-    
-    try {
-      const res = await fetch(`/api/enquiries/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status })
-      });
-      const result = await res.json();
-      if (result.success) {
-        // update local list
-        setEnquiries(prev => prev.map(e => e.id === id ? { ...e, status: status as any } : e));
-        showToast(`Enquiry state changed to ${status}`, "success");
-        
-        // Log activity
-        await logActivity({
-          actionType: "update_enquiry",
-          adminName: currentUser?.name || "Director Das",
-          adminEmail: currentUser?.email || "hemant@muvireel.in",
-          details: `Updated admissions enquiry status ${nameLabel} to '${status}'.`
-        });
-      }
-    } catch (err) {
-      setEnquiries(prev => prev.map(e => e.id === id ? { ...e, status: status as any } : e));
-      showToast(`State updated locally to ${status}`, "success");
-      
-      // Log activity
-      await logActivity({
-        actionType: "update_enquiry",
-        adminName: currentUser?.name || "Director Das",
-        adminEmail: currentUser?.email || "hemant@muvireel.in",
-        details: `Updated admissions enquiry status ${nameLabel} locally to '${status}'.`
-      });
-    }
-  };
-
-  const handleNavigateToDashboard = (tab: string = "lessons") => {
-    setDashboardTab(tab);
-    setCurrentView("dashboard");
-    // scroll smoothly to top
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  if (isLoading && courses.length === 0) {
-    return (
-      <div className="bg-[#0b0b0c] text-neutral-300 min-h-screen flex flex-col items-center justify-center p-6 font-sans">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 border border-amber-400/40 animate-spin mb-6 flex items-center justify-center text-black font-extrabold text-xl font-display">
-          F
-        </div>
-        <p className="text-sm font-semibold tracking-wide text-white uppercase font-display animate-pulse">Initializing Filmfluencer Academy Platform...</p>
-        <p className="text-xs text-neutral-500 mt-2 font-mono">Securing live Node API routes &amp; loading film assets</p>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-[#0b0b0c] text-gray-100 min-h-screen font-sans antialiased selection:bg-amber-400 selection:text-black">
@@ -413,77 +183,337 @@ export default function App() {
         </div>
       )}
 
-      {/* RENDER ACTIVE SCREEN CONTROLLERS */}
-      {currentView === "home" ? (
-        <LandingPage 
-          portfolio={portfolio}
-          courses={courses}
-          onSubmitEnquiry={handleSubmitEnquiry}
-          onTriggerPayment={handleTriggerPayment}
-          onCreateSubscription={handleCreateSubscription}
-          onNavigateToDashboard={handleNavigateToDashboard}
-          isAdminPowerActive={currentUser?.role === "admin"}
-          currentUser={currentUser}
-          onTriggerAuth={() => setIsAuthModalOpen(true)}
-          onSignOut={() => {
-            setCurrentUser(null);
-            showToast("Successfully signed out of secure session.", "info");
-          }}
-          onEditAsset={(asset) => {
-            setSelectedTaggingAsset(asset);
-            setIsTaggingModalOpen(true);
-          }}
-        />
-      ) : (
-        <Dashboard 
-          courses={courses}
-          profile={profile}
-          payments={payments}
-          subscriptions={subscriptions}
-          enquiries={enquiries}
-          completedLessons={completedLessons}
-          activeTab={dashboardTab}
-          setActiveTab={setDashboardTab}
-          onUpdateProfile={handleUpdateProfile}
-          onToggleLesson={handleToggleLesson}
-          onTriggerPayment={handleTriggerPayment}
-          onCreateSubscription={handleCreateSubscription}
-          onToggleSubscription={handleToggleSubscription}
-          onTriggerSubscriptionDebit={handleTriggerSubscriptionDebit}
-          onUpdateEnquiryStatus={handleUpdateEnquiryStatus}
-          onBackToLanding={() => setCurrentView("home")}
-          isAdminPowerActive={currentUser?.role === "admin"}
-          currentUser={currentUser}
-        />
-      )}
+      {/* RENDER DYNAMIC ADMISSIONS LANDING PAGE */}
+      <LandingPage 
+        portfolio={portfolio}
+        courses={courses}
+        onSubmitEnquiry={handleSubmitEnquiry}
+        onTriggerPayment={handleTriggerPayment}
+        onCreateSubscription={handleCreateSubscription}
+      />
 
-      {/* MODAL LIGHTBOXES */}
-      {isAuthModalOpen && (
-        <AuthModal 
-          isOpen={isAuthModalOpen}
-          onClose={() => setIsAuthModalOpen(false)}
-          onAuthSuccess={(user) => {
-            setCurrentUser(user);
-            setIsAuthModalOpen(false);
-            showToast(`Welcome back, ${user.name}! ${user.role === "admin" ? "Administrative Power enabled." : "Student Portal active."}`, "success");
-          }}
-        />
-      )}
+      {/* CASHFREE INTERACTIVE CHECKOUT MODAL */}
+      {cashfreeModal && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+          <div className="bg-white text-neutral-800 rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[480px] border border-neutral-200 animate-in zoom-in-95 duration-200 relative">
+            
+            {/* CLOSE BUTTON */}
+            <button 
+              onClick={() => setCashfreeModal(null)}
+              className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-neutral-700 transition-colors z-10"
+              disabled={cashfreePaying || cashfreeSuccess}
+            >
+              <X className="w-5 h-5" />
+            </button>
 
-      {isTaggingModalOpen && selectedTaggingAsset && (
-        <FirebaseTaggingModal 
-          isOpen={isTaggingModalOpen}
-          onClose={() => {
-            setIsTaggingModalOpen(false);
-            setSelectedTaggingAsset(null);
-          }}
-          asset={selectedTaggingAsset}
-          onSave={(id, updates) => {
-            showToast("Asset properties synchronized directly to Google Firestore!", "success");
-            setIsTaggingModalOpen(false);
-            setSelectedTaggingAsset(null);
-          }}
-        />
+            {/* LEFT BAR - MERCHANT & AMOUNT & METHOD TAB NAVIGATION */}
+            <div className="bg-neutral-50 p-6 md:p-8 border-r border-neutral-100 flex flex-col justify-between w-full md:w-[240px] shrink-0">
+              <div className="space-y-6">
+                {/* Cashfree Logo Head */}
+                <div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-black tracking-tight text-indigo-900 font-sans">cashfree</span>
+                    <span className="text-xs font-medium text-emerald-500 bg-emerald-50 px-1 py-0.2 rounded text-[9px] uppercase tracking-wide">payments</span>
+                  </div>
+                  <p className="text-[10px] text-neutral-400 font-medium uppercase tracking-wider mt-1">SECURE CHECKOUT</p>
+                </div>
+
+                {/* Amount details */}
+                <div className="bg-white p-4 rounded-2xl border border-neutral-200/60 shadow-sm">
+                  <span className="text-[9px] font-mono uppercase text-neutral-400 block tracking-wider">PAYING TO</span>
+                  <span className="text-xs font-bold text-neutral-800 block truncate">Filmfluencer Academy</span>
+                  <div className="mt-2 pt-2 border-t border-neutral-100">
+                    <span className="text-[9px] font-mono uppercase text-neutral-400 block tracking-wider">AMOUNT</span>
+                    <span className="text-2xl font-black text-indigo-950 font-mono">₹{cashfreeModal.amount.toLocaleString()}</span>
+                  </div>
+                </div>
+
+                {/* Navigation Tabs */}
+                <div className="space-y-1.5">
+                  <span className="text-[9px] font-mono uppercase text-neutral-400 block tracking-wider px-2 mb-1">SELECT METHOD</span>
+                  
+                  <button
+                    onClick={() => setCashfreeTab("upi")}
+                    disabled={cashfreePaying || cashfreeSuccess}
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-all ${
+                      cashfreeTab === "upi"
+                        ? "bg-indigo-900 text-white shadow-md shadow-indigo-900/15"
+                        : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+                    }`}
+                  >
+                    <Smartphone className="w-4 h-4 shrink-0" />
+                    <span>UPI / Instant App</span>
+                  </button>
+
+                  <button
+                    onClick={() => setCashfreeTab("card")}
+                    disabled={cashfreePaying || cashfreeSuccess}
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-all ${
+                      cashfreeTab === "card"
+                        ? "bg-indigo-900 text-white shadow-md shadow-indigo-900/15"
+                        : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+                    }`}
+                  >
+                    <CreditCard className="w-4 h-4 shrink-0" />
+                    <span>Debit/Credit Cards</span>
+                  </button>
+
+                  <button
+                    onClick={() => setCashfreeTab("netbanking")}
+                    disabled={cashfreePaying || cashfreeSuccess}
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-all ${
+                      cashfreeTab === "netbanking"
+                        ? "bg-indigo-900 text-white shadow-md shadow-indigo-900/15"
+                        : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+                    }`}
+                  >
+                    <Building className="w-4 h-4 shrink-0" />
+                    <span>Net Banking</span>
+                  </button>
+
+                  <button
+                    onClick={() => setCashfreeTab("wallet")}
+                    disabled={cashfreePaying || cashfreeSuccess}
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-all ${
+                      cashfreeTab === "wallet"
+                        ? "bg-indigo-900 text-white shadow-md shadow-indigo-900/15"
+                        : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+                    }`}
+                  >
+                    <Wallet className="w-4 h-4 shrink-0" />
+                    <span>Mobile Wallets</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Secure Lock Badge */}
+              <div className="hidden md:flex items-center gap-2 pt-4 border-t border-neutral-100 text-[10px] text-neutral-400">
+                <Lock className="w-3.5 h-3.5 text-indigo-900" />
+                <span>PCI-DSS Compliant</span>
+              </div>
+            </div>
+
+            {/* RIGHT PANEL - ACTIVE METHOD DETAIL OPTIONS SCREEN */}
+            <div className="p-6 md:p-8 flex-1 flex flex-col justify-between min-h-[380px] md:min-h-0 bg-white relative">
+              
+              {/* INTERACTIVE FORM SCENARIOS */}
+              <div className="space-y-5">
+                <div className="pb-1 border-b border-neutral-100">
+                  <h4 className="text-base font-bold text-neutral-800 uppercase tracking-tight">
+                    {cashfreeTab === "upi" && "Unified Payments Interface (UPI)"}
+                    {cashfreeTab === "card" && "Enter Card Credentials"}
+                    {cashfreeTab === "netbanking" && "Popular Netbanking Portals"}
+                    {cashfreeTab === "wallet" && "Select Linked Wallets"}
+                  </h4>
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    {cashfreeTab === "upi" && "Pay instantly using your preferred UPI app or barcode scanner."}
+                    {cashfreeTab === "card" && "We support Visa, Mastercard, RuPay, and Diner's Club."}
+                    {cashfreeTab === "netbanking" && "Select your bank to redirect to their secure auth checkout."}
+                    {cashfreeTab === "wallet" && "Link and pay via your pre-loaded e-wallets."}
+                  </p>
+                </div>
+
+                {/* TAB CONTENT: UPI */}
+                {cashfreeTab === "upi" && (
+                  <div className="space-y-4 animate-in fade-in duration-200">
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+                      {/* Interactive Simulated QR Code */}
+                      <div className="sm:col-span-4 flex flex-col items-center justify-center p-3 border border-neutral-200 rounded-2xl bg-neutral-50/50">
+                        <QrCode className="w-24 h-24 text-indigo-950 animate-pulse" />
+                        <span className="text-[8px] font-mono font-bold text-indigo-900 mt-1 uppercase tracking-wider">Scan QR with App</span>
+                      </div>
+
+                      {/* Manual VPA input */}
+                      <div className="sm:col-span-8 space-y-3">
+                        <label className="text-[10px] font-mono font-bold text-neutral-500 uppercase block">ENTER VIRTUAL PAYMENT ADDRESS (VPA) / UPI ID</label>
+                        <div className="flex gap-2">
+                          <input 
+                            type="text" 
+                            placeholder="e.g. ranbirkashyap@okaxis" 
+                            value={cashfreeUpiId}
+                            onChange={(e) => setCashfreeUpiId(e.target.value)}
+                            className="flex-1 px-3 py-2 border border-neutral-300 rounded-xl text-sm font-sans focus:outline-none focus:border-indigo-900 text-neutral-800"
+                          />
+                          <button 
+                            onClick={() => setCashfreeUpiId("filmfluencer@okaxis")}
+                            className="px-2.5 py-1 text-[10px] font-bold uppercase font-mono text-indigo-900 hover:bg-indigo-50 border border-indigo-200 rounded-xl transition-all"
+                          >
+                            Autofill
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-4 gap-2 text-center pt-1">
+                          {["GPay", "PhonePe", "Paytm", "BHIM"].map((app) => (
+                            <div key={app} className="p-1.5 border border-neutral-100 rounded-xl text-[9px] font-bold text-neutral-600 bg-neutral-50 hover:border-indigo-200 transition-all cursor-pointer">
+                              {app}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB CONTENT: CARDS */}
+                {cashfreeTab === "card" && (
+                  <div className="space-y-3.5 animate-in fade-in duration-200">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-mono font-bold text-neutral-500 uppercase block">16-DIGIT CARD NUMBER</label>
+                      <input 
+                        type="text" 
+                        placeholder="4321 0987 6543 2109" 
+                        maxLength={19}
+                        value={cashfreeCardNum}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\s?/g, '').replace(/(\d{4})/g, '$1 ').trim();
+                          setCashfreeCardNum(val);
+                        }}
+                        className="w-full px-3 py-2 border border-neutral-300 rounded-xl text-sm font-mono focus:outline-none focus:border-indigo-900 text-neutral-800"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-mono font-bold text-neutral-500 uppercase block">EXPIRY DATE</label>
+                        <input 
+                          type="text" 
+                          placeholder="MM/YY" 
+                          maxLength={5}
+                          value={cashfreeCardExpiry}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setCashfreeCardExpiry(val);
+                          }}
+                          className="w-full px-3 py-2 border border-neutral-300 rounded-xl text-sm font-mono text-center focus:outline-none focus:border-indigo-900 text-neutral-800"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-mono font-bold text-neutral-500 uppercase block">CVV</label>
+                        <input 
+                          type="password" 
+                          placeholder="•••" 
+                          maxLength={3}
+                          value={cashfreeCardCvv}
+                          onChange={(e) => setCashfreeCardCvv(e.target.value)}
+                          className="w-full px-3 py-2 border border-neutral-300 rounded-xl text-sm font-mono text-center focus:outline-none focus:border-indigo-900 text-neutral-800"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-mono font-bold text-neutral-500 uppercase block">NAME ON CARD</label>
+                      <input 
+                        type="text" 
+                        placeholder="Ranbir Kashyap" 
+                        value={cashfreeCardName}
+                        onChange={(e) => setCashfreeCardName(e.target.value)}
+                        className="w-full px-3 py-2 border border-neutral-300 rounded-xl text-sm font-sans focus:outline-none focus:border-indigo-900 text-neutral-800"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB CONTENT: NET BANKING */}
+                {cashfreeTab === "netbanking" && (
+                  <div className="space-y-3 animate-in fade-in duration-200">
+                    <label className="text-[10px] font-mono font-bold text-neutral-500 uppercase block">POPULAR BANKS</label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {["SBI", "HDFC", "ICICI", "Axis", "Kotak", "Yes Bank"].map((bank) => (
+                        <button
+                          key={bank}
+                          onClick={() => setCashfreeBank(bank)}
+                          className={`p-3 text-xs font-bold border rounded-xl transition-all ${
+                            cashfreeBank === bank
+                              ? "bg-indigo-50 border-indigo-400 text-indigo-950"
+                              : "border-neutral-200 hover:border-neutral-300 text-neutral-600 bg-neutral-50/20"
+                          }`}
+                        >
+                          {bank === "SBI" && "State Bank of India"}
+                          {bank === "HDFC" && "HDFC Bank"}
+                          {bank === "ICICI" && "ICICI Bank"}
+                          {bank === "Axis" && "Axis Bank"}
+                          {bank === "Kotak" && "Kotak Mahindra"}
+                          {bank === "Yes Bank" && "YES Bank"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB CONTENT: WALLETS */}
+                {cashfreeTab === "wallet" && (
+                  <div className="space-y-3 animate-in fade-in duration-200">
+                    <label className="text-[10px] font-mono font-bold text-neutral-500 uppercase block">POPULAR WALLETS</label>
+                    <div className="grid grid-cols-2 gap-3">
+                      {["Paytm", "PhonePe", "Amazon Pay", "Airtel Money"].map((wallet) => (
+                        <button
+                          key={wallet}
+                          onClick={() => setCashfreeWallet(wallet)}
+                          className={`p-4 text-xs font-bold border rounded-2xl text-center transition-all ${
+                            cashfreeWallet === wallet
+                              ? "bg-indigo-50 border-indigo-400 text-indigo-950"
+                              : "border-neutral-200 hover:border-neutral-300 text-neutral-600 bg-neutral-50/20"
+                          }`}
+                        >
+                          {wallet} Wallet
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* ACTION BOTTOM ROW */}
+              <div className="pt-6 border-t border-neutral-100 flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
+                <div className="flex items-center gap-1.5 text-xs text-neutral-400">
+                  <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                  <span>Secure 256-bit SSL encrypted</span>
+                </div>
+
+                <button
+                  onClick={handleProcessCashfreePayment}
+                  disabled={cashfreePaying || cashfreeSuccess}
+                  className="w-full sm:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10 cursor-pointer disabled:opacity-50 transition-all font-mono"
+                >
+                  <span>Pay ₹{cashfreeModal.amount.toLocaleString()} Now</span> &rarr;
+                </button>
+              </div>
+
+            </div>
+
+            {/* PROCESSING OVERLAY SHIELDS */}
+            {cashfreePaying && (
+              <div className="absolute inset-0 bg-neutral-950/90 z-20 flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-300">
+                <Loader className="w-12 h-12 text-indigo-400 animate-spin mb-4" />
+                <h5 className="text-white text-base font-bold font-mono tracking-wide uppercase">CASHFREE TRANSACT ACTIVE</h5>
+                <p className="text-neutral-400 text-xs mt-2 max-w-sm font-sans animate-pulse">{cashfreeStatusMessage}</p>
+                <div className="mt-8 text-[9px] font-mono text-neutral-600 uppercase tracking-widest">
+                  Order Ref: CF-ORD-{Math.floor(Math.random() * 900000 + 100000)}
+                </div>
+              </div>
+            )}
+
+            {/* SUCCESS OVERLAY SHIELDS */}
+            {cashfreeSuccess && (
+              <div className="absolute inset-0 bg-white z-30 flex flex-col items-center justify-center p-8 text-center animate-in zoom-in-95 duration-350">
+                <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 mb-4 shadow-lg shadow-emerald-500/10">
+                  <Check className="w-8 h-8" />
+                </div>
+                <h4 className="text-indigo-950 text-xl font-black uppercase tracking-tight">Payment Approved!</h4>
+                <p className="text-neutral-500 text-xs mt-1.5 max-w-sm leading-relaxed">
+                  Your seat deposit at <strong className="text-neutral-800">Filmfluencer Academy</strong> has been registered on our Cashfree node ledger.
+                </p>
+                <div className="mt-6 bg-neutral-50 border border-neutral-150 p-4 rounded-2xl w-full max-w-xs text-left text-xs font-mono space-y-1">
+                  <div className="flex justify-between"><span className="text-neutral-400">Merchant:</span> <span className="text-neutral-800 font-bold">Filmfluencer Academy</span></div>
+                  <div className="flex justify-between"><span className="text-neutral-400">Total Paid:</span> <span className="text-emerald-600 font-black">₹{cashfreeModal.amount.toLocaleString()}</span></div>
+                  <div className="flex justify-between"><span className="text-neutral-400">Status:</span> <span className="text-emerald-600 font-bold">SUCCESS</span></div>
+                  <div className="flex justify-between"><span className="text-neutral-400">Receipt ID:</span> <span className="text-neutral-800">CF-RC-{Math.floor(Math.random() * 900000 + 100000)}</span></div>
+                </div>
+                <p className="text-[10px] text-neutral-400 mt-6 animate-pulse">Closing receipt window shortly...</p>
+              </div>
+            )}
+
+          </div>
+        </div>
       )}
 
     </div>
