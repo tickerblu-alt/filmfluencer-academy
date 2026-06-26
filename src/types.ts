@@ -85,7 +85,7 @@ export interface PortfolioData {
 
 // --- NEW FULL-STACK INTEGRATED SCHEMAS ---
 
-export interface FFAUser {
+export interface FIFIUser {
   id: string;
   name: string;
   email: string;
@@ -131,7 +131,7 @@ export interface MediaAsset {
   createdAt: string;
 }
 
-export interface FFANotification {
+export interface FIFINotification {
   id: string;
   studentName: string;
   type: "fee" | "completion" | "general";
@@ -141,7 +141,7 @@ export interface FFANotification {
   sentByAdmin: boolean;
 }
 
-export interface FFAActivityLog {
+export interface FIFIActivityLog {
   id: string;
   actionType: "create_event" | "create_cohort" | "create_pvt_ltd" | "send_notification" | "update_enquiry" | "modify_course" | string;
   adminName: string;

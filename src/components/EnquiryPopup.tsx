@@ -36,11 +36,11 @@ export default function EnquiryPopup({ onSubmitEnquiry }: EnquiryPopupProps) {
 
   useEffect(() => {
     // Check if the user has already seen the popup in this session
-    const seen = sessionStorage.getItem("ffa_enquiry_popup_seen_2026");
+    const seen = sessionStorage.getItem("fifi_enquiry_popup_seen_2026");
     if (!seen) {
       const timer = setTimeout(() => {
         setIsOpen(true);
-        sessionStorage.setItem("ffa_enquiry_popup_seen_2026", "true");
+        sessionStorage.setItem("fifi_enquiry_popup_seen_2026", "true");
       }, 1500); // Trigger after 1.5 seconds
       return () => clearTimeout(timer);
     }

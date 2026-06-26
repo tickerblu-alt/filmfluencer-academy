@@ -151,7 +151,7 @@ export default function TheJourney() {
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
               <span className="text-[11px] font-mono text-amber-300 uppercase tracking-widest font-bold">
-                The Journey of the FFA Founder
+                The Journey of the FIFI Founder
               </span>
             </div>
 

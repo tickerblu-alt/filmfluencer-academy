@@ -19,13 +19,25 @@ export default function FilmIndustryRedirected() {
               </span>
             </div>
 
-            <h3 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-display text-white tracking-tight leading-tight">
-              The Film Industry is Being Re-Directed.
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-serif font-light text-white tracking-tight leading-tight">
+              The Film Industry is <br />
+              <span className="italic font-normal text-amber-400 font-serif">Being Re-Invented.</span>
             </h3>
 
-            <p className="text-sm sm:text-base text-neutral-300 leading-relaxed font-sans">
-              For 100 years, directors had to wait in lobby lines to get approval from traditional big studios. <strong className="text-white">No more</strong>. The modern high-definition filmmaker directs short films directly onto user screens. By focusing on premium formatting, hyper-crafted pacing, and community monetization, we have built a multi-million reach engine.
-            </p>
+            <div className="text-sm sm:text-base text-neutral-300 leading-relaxed font-sans space-y-4">
+              <p>
+                For a century, the gate was controlled by people who never picked up a camera.
+              </p>
+              <p>
+                Studios decided who got made. Distributors decided who got seen. And directors from Guwahati, Nagpur, Patna — they waited in those lobbies for permission that rarely came.
+              </p>
+              <p className="font-semibold text-white">
+                That permission structure is finished.
+              </p>
+              <p>
+                The filmmaker who understands modern screens, modern audiences, and modern money no longer needs a studio gate to walk through. <strong className="text-amber-400">They build their own.</strong>
+              </p>
+            </div>
           </div>
 
           {/* Three Pillars columns */}
@@ -42,9 +54,9 @@ export default function FilmIndustryRedirected() {
                   <Maximize2 className="w-6 h-6" />
                 </span>
                 <div className="space-y-2">
-                  <h4 className="text-lg font-bold text-white font-display">Modern Kinematics</h4>
+                  <h4 className="text-lg font-bold text-white font-display">Cinema That Hooks in 3 Seconds</h4>
                   <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed font-sans">
-                    Format ratio framing, high-functional anamorphic perspective, and specialized lightning sets designed to hook modern audiences instantly.
+                    The way a frame is built — its ratio, its depth, the way light falls on a face — decides whether a viewer stays or scrolls. We teach the visual grammar of attention: anamorphic perspective, practical lighting that reads on a 6-inch screen, and pacing that makes cutting feel inevitable rather than mechanical.
                   </p>
                 </div>
               </div>
@@ -61,9 +73,9 @@ export default function FilmIndustryRedirected() {
                   <Activity className="w-6 h-6" />
                 </span>
                 <div className="space-y-2">
-                  <h4 className="text-lg font-bold text-white font-display">The Acoustic Pulse</h4>
+                  <h4 className="text-lg font-bold text-white font-display">Sound That Makes the Body React</h4>
                   <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed font-sans">
-                    Master the sound design, foley soundscapes, dramatic low-frequency triggers, and rhythm pacing that captures full visual retention.
+                    Most independent films lose their audience through the ears, not the eyes. We build sound from the floor up — foley that grounds a scene in physical reality, low-frequency design that the body feels before the mind registers it, and a rhythm between dialogue and silence that creates the tension no camera can manufacture alone.
                   </p>
                 </div>
               </div>
@@ -80,9 +92,9 @@ export default function FilmIndustryRedirected() {
                   <Globe className="w-6 h-6" />
                 </span>
                 <div className="space-y-2">
-                  <h4 className="text-lg font-bold text-white font-display">Distribution Mastery</h4>
+                  <h4 className="text-lg font-bold text-white font-display">A Distribution Channel You Actually Own</h4>
                   <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed font-sans">
-                    Get featured inside the core private MUVIREEL app. Build independent direct ticketing, fan subscription locks, and direct brand sponsorship layers.
+                    Your finished work streams on MUVIREEL — not as a hope, but as a guaranteed first window. Direct ticketing for your premiere. Fan subscription tiers your audience chooses to pay for. Brand integration deals you negotiate and keep. No algorithm deciding your reach. No platform taking 70%. Your film, your audience, your revenue — from the night it premieres.
                   </p>
                 </div>
               </div>

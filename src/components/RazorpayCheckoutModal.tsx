@@ -107,7 +107,7 @@ export default function RazorpayCheckoutModal({
             <span className="w-5 h-5 rounded-md bg-blue-600 flex items-center justify-center text-[10px] font-black text-white">R</span>
             <div>
               <h4 className="text-xs font-mono font-bold text-white tracking-widest uppercase">Razorpay Secure</h4>
-              <p className="text-[9px] text-neutral-500 font-mono tracking-wider">FFA ONLINE MERCHANT GATEWAY</p>
+              <p className="text-[9px] text-neutral-500 font-mono tracking-wider">FIFI ONLINE MERCHANT GATEWAY</p>
             </div>
           </div>
           <button 

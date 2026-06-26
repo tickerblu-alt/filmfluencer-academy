@@ -85,15 +85,19 @@ export default function FilmfluencerThesis({
             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/[0.03] rounded-full blur-2xl pointer-events-none" />
             <div>
               <span className="text-[10px] font-mono text-amber-400 bg-amber-950/40 px-2 py-1 rounded border border-amber-500/20 font-bold uppercase tracking-widest block max-w-max mb-5">
-                The Filmfluencer Model
+                The FIFI Program Value &amp; Fee Structure
               </span>
               <h4 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
                 <span className="text-emerald-400 text-lg">👑</span> Real Film-Directing &amp; Social Network Authority
               </h4>
               <div className="text-xs text-neutral-300 leading-relaxed mb-6 space-y-4 font-sans">
                 <p>
-                  Traditional film schools charge for lectures. We invest your tuition back into your career. 25% of your fee is instantly reallocated to fund your corporate setup, PR, and audience growth.
+                  <strong>The Valuation Anchor:</strong> The true institutional valuation of this advanced directorship and performance cohort is ₹7,50,000/-. However, we do not accept standard commercial admissions. Entry is strictly earned through merit.
                 </p>
+                <p>
+                  <strong>The Reallocation Copy:</strong> We have completely dismantled the purpose of traditional tuition fees. Almost 25% of your premium investment is directly reallocated back into your personal career infrastructure. We fund your corporate identity, establish your legal studio ownership, and seed your verified social media audience base before our project even wraps.
+                </p>
+                
                 <div className="bg-black/40 p-4 rounded-xl border border-neutral-800/80 font-mono text-[10px] text-amber-400/90 whitespace-pre leading-normal overflow-x-auto">
 {`[ Total Premium Program Investment ]
   ├── 75%  │ Elite Practical Training & On-Set Feature Directing
@@ -101,25 +105,20 @@ export default function FilmfluencerThesis({
                 </div>
                 
                 <div className="space-y-4 border-t border-amber-500/10 pt-4">
-                  <p className="text-xs font-bold text-white uppercase tracking-wider font-mono">Tuition Allocation:</p>
+                  <p className="text-xs font-bold text-white uppercase tracking-wider font-mono">The 75/25 Budget Allocation:</p>
                   
                   <div className="space-y-1">
-                    <p className="text-xs font-bold text-amber-400">75% — Elite Production &amp; Directorship Training</p>
-                    <ul className="list-disc pl-4 space-y-1 text-[11px] text-neutral-400">
-                      <li>On-set feature film mentorship under Hemant Nilim Das.</li>
-                      <li>Hands-on shooting with RED/ARRI camera packages.</li>
-                      <li>Access to professional live sets, union crews, and actors.</li>
-                      <li>End-to-end post-production and 2026 global distribution routing.</li>
-                    </ul>
+                    <p className="text-xs font-bold text-amber-400">75% — Elite Production &amp; On-Set Execution</p>
+                    <p className="text-[11px] text-neutral-400">
+                      Direct mentorship on a live set under Hemant Nilim Das, hands-on tracking with high-end RED/ARRI camera packages, managing union crews, and directing seasoned actors through a real commercial production pipeline.
+                    </p>
                   </div>
 
                   <div className="space-y-1">
-                    <p className="text-xs font-bold text-amber-400">25% — Direct Career Capital Reallocation (Included)</p>
-                    <ul className="list-disc pl-4 space-y-1 text-[11px] text-neutral-400">
-                      <li><strong>Legal Studio Setup:</strong> Incorporation of a Private Limited Company as Managing Director.</li>
-                      <li><strong>1-Year National PR:</strong> 12 months of media syndication targeting national news agencies.</li>
-                      <li><strong>Audience Building:</strong> Budget allocation to build a verified social media base.</li>
-                    </ul>
+                    <p className="text-xs font-bold text-amber-400">25% — Direct Career Capital Reallocation</p>
+                    <p className="text-[11px] text-neutral-400">
+                      Incorporation of a Private Limited Company registered in your legal name as Managing Director, 12 full months of dedicated media syndication targeting major national news agencies, and a verified social media follower base built for your brand—fully structured by Quafasto Innovation Pvt Ltd.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -141,7 +140,7 @@ export default function FilmfluencerThesis({
 
           <div>
             <span className="text-xs font-mono font-bold text-amber-500 uppercase tracking-widest">Interactive Proof Tool</span>
-            <h4 className="text-2xl font-bold font-display text-white mt-1 mb-2">Simulate Your &quot;Filmfluencer&quot; Reach</h4>
+            <h4 className="text-2xl font-bold font-display text-white mt-1 mb-2">Build your FilmFluencer Unfair Advantage</h4>
             <p className="text-xs text-neutral-400 leading-relaxed">
               Tune the dynamic controls below to see how having the standard 1-Year Integrated PR Support and Brand Elevation (included with your cohort enrollment) completely bypasses traditional distributor bottlenecks.
             </p>
@@ -268,111 +267,7 @@ export default function FilmfluencerThesis({
         </div>
       </div>
 
-      {/* DUAL IDENTITY TRACKS */}
-      <div id="dual-identity" className="mt-24 pt-16 border-t border-neutral-900/80">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-mono font-bold text-amber-500 uppercase tracking-widest block mb-1">
-            THE DUAL IDENTITY
-          </span>
-          <h3 className="text-3xl sm:text-5xl font-bold font-display text-white tracking-tight">
-            Two Pillars of <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">the Ultimate Graduate</span>
-          </h3>
-          <p className="text-neutral-400 mt-3 text-xs sm:text-sm font-sans max-w-xl mx-auto leading-relaxed">
-            We train you across both disciplines so you enter the industry not as a beggar seeking gigs, but as a fully independent media asset.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-24 relative">
-          <div className="absolute -inset-1 bg-gradient-to-r from-neutral-900/50 via-amber-500/5 to-neutral-900/50 rounded-3xl blur-3xl pointer-events-none" />
-          
-          {/* Track A Card */}
-          <div className="bg-neutral-950/60 border border-neutral-800 p-8 rounded-3xl relative overflow-hidden flex flex-col justify-between hover:border-neutral-700 transition-all duration-300">
-            <div>
-              <span className="text-[10px] font-mono text-neutral-400 bg-neutral-900 px-2.5 py-1 rounded border border-neutral-800 font-bold uppercase tracking-widest block max-w-max mb-5">
-                Track A — Technical Filmmaker
-              </span>
-              <h4 className="text-2xl font-bold font-display text-white mb-2 tracking-tight">
-                ON-SET CINEMA-GRADE EXECUTION
-              </h4>
-              <p className="text-xs text-amber-500/80 font-mono mb-6 uppercase tracking-wider">
-                The On-set industry-tool &amp; craft mastery
-              </p>
-              
-              <ul className="space-y-4">
-                <li className="flex gap-3">
-                  <span className="text-amber-500 shrink-0 mt-0.5">🎬</span>
-                  <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans">
-                    Directing star actors using the <strong className="text-white">Das Method</strong> — exact, psychological vocabulary used on-set with iconic powerhouse actors.
-                  </p>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-amber-500 shrink-0 mt-0.5">🎥</span>
-                  <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans">
-                    Full fledged Studio Centric Film-Craft along guerrilla production WorkFlow: Real Footrprint Holywood tech Centric Productiom Design &amp; Das&apos;s &apos;Pocket Gangsters&apos; Single-take Linear-Studio Filmmkaing
-                  </p>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-amber-500 shrink-0 mt-0.5">💾</span>
-                  <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans">
-                    Advanced post-production workflow: Master professional industry-grade colour grading, spatial sound design, and robust custom edit pipelines.
-                  </p>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="mt-8 pt-4 border-t border-neutral-900 text-right">
-              <span className="text-[10px] font-mono text-neutral-500">Unrestricted Physical Camera Access</span>
-            </div>
-          </div>
-
-          {/* Track B Card (Featured) */}
-          <div className="bg-[#121214] border-2 border-amber-500/30 p-8 rounded-3xl relative overflow-hidden flex flex-col justify-between shadow-2xl shadow-amber-500/5 hover:border-amber-500/50 transition-all duration-300">
-            {/* Featured Track Badge */}
-            <div className="absolute top-0 right-0 p-3">
-              <span className="bg-amber-500/20 text-amber-400 border border-amber-500/20 text-[9px] font-bold font-mono tracking-widest px-2.5 py-1 rounded-bl-xl uppercase block">
-                Featured Track
-              </span>
-            </div>
-
-            <div>
-              <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded border border-amber-500/25 font-bold uppercase tracking-widest block max-w-max mb-5">
-                Track B — Media Entrepreneur
-              </span>
-              <h4 className="text-2xl font-bold font-display text-white mb-2 tracking-tight">
-                Co-Earning being a Fulltime FilmPreneur
-              </h4>
-              <p className="text-xs text-amber-400 font-mono mb-6 uppercase tracking-wider">
-                The Corporate Placement Stack
-              </p>
-
-              <ul className="space-y-4">
-                <li className="flex gap-3">
-                  <span className="text-amber-400 shrink-0 mt-0.5">💼</span>
-                  <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-sans">
-                    <strong className="text-white">Pvt. Ltd. production banner</strong> officially incorporated in your name before graduation, fully set up by our certified legal panel.
-                  </p>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-amber-400 shrink-0 mt-0.5">📺</span>
-                  <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-sans">
-                    <strong className="text-white">OTT distribution models navigation:</strong> How to confidently and legally pitch your masterworks to streaming platforms like Netflix India, Zee5, and Amazon.
-                  </p>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-amber-400 shrink-0 mt-0.5">📦</span>
-                  <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-sans">
-                    <strong className="text-white">IP packaging formula:</strong> Learn optioning literary rights, attaching bankable key talent, and de-risking high-value project scopes completely.
-                  </p>
-                </li>
-              </ul>
-            </div>
-
-            <div className="mt-8 pt-4 border-t border-amber-500/10 text-right">
-              <span className="text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider">Sponsor &amp; Brand Integration Enabled</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
   );
 }

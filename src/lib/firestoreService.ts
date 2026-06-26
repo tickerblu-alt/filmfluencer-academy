@@ -3,9 +3,9 @@ import {
   AcademicCalendarEvent, 
   StudyCohort, 
   PvtLtdEntity, 
-  FFANotification, 
-  FFAUser,
-  FFAActivityLog
+  FIFINotification, 
+  FIFIUser,
+  FIFIActivityLog
 } from "../types";
 
 export enum OperationType {
@@ -57,76 +57,76 @@ function saveStoredItem<T>(key: string, data: T[]) {
 
 // 1. Core Media Assets (Images and Videos)
 export async function getMediaAssets(): Promise<MediaAsset[]> {
-  return getStoredItem<MediaAsset>("ffa_simulated_media", getMockMedia);
+  return getStoredItem<MediaAsset>("fifi_simulated_media", getMockMedia);
 }
 
 export async function addMediaAsset(asset: Omit<MediaAsset, "id">): Promise<MediaAsset> {
-  const media = getStoredItem<MediaAsset>("ffa_simulated_media", getMockMedia);
+  const media = getStoredItem<MediaAsset>("fifi_simulated_media", getMockMedia);
   const newAsset: MediaAsset = {
     ...asset,
     id: "media_" + Math.random().toString(36).substr(2, 9)
   };
   media.unshift(newAsset);
-  saveStoredItem("ffa_simulated_media", media);
+  saveStoredItem("fifi_simulated_media", media);
   return newAsset;
 }
 
 export async function updateMediaAsset(id: string, updates: Partial<MediaAsset>): Promise<void> {
-  const media = getStoredItem<MediaAsset>("ffa_simulated_media", getMockMedia);
+  const media = getStoredItem<MediaAsset>("fifi_simulated_media", getMockMedia);
   const updated = media.map(item => item.id === id ? { ...item, ...updates } : item);
-  saveStoredItem("ffa_simulated_media", updated);
+  saveStoredItem("fifi_simulated_media", updated);
 }
 
 // 2. Academic Calendar Events
 export async function getCalendarEvents(): Promise<AcademicCalendarEvent[]> {
-  return getStoredItem<AcademicCalendarEvent>("ffa_simulated_calendar", getMockCalendar);
+  return getStoredItem<AcademicCalendarEvent>("fifi_simulated_calendar", getMockCalendar);
 }
 
 export async function addCalendarEvent(event: Omit<AcademicCalendarEvent, "id">): Promise<AcademicCalendarEvent> {
-  const events = getStoredItem<AcademicCalendarEvent>("ffa_simulated_calendar", getMockCalendar);
+  const events = getStoredItem<AcademicCalendarEvent>("fifi_simulated_calendar", getMockCalendar);
   const newEvent: AcademicCalendarEvent = {
     ...event,
     id: "evt_" + Math.random().toString(36).substr(2, 9)
   };
   events.push(newEvent);
-  saveStoredItem("ffa_simulated_calendar", events);
+  saveStoredItem("fifi_simulated_calendar", events);
   return newEvent;
 }
 
 // 3. Study Cohorts (Frictionless Batches)
 export async function getStudyCohorts(): Promise<StudyCohort[]> {
-  return getStoredItem<StudyCohort>("ffa_simulated_cohorts", getMockCohorts);
+  return getStoredItem<StudyCohort>("fifi_simulated_cohorts", getMockCohorts);
 }
 
 export async function addStudyCohort(cohort: Omit<StudyCohort, "id">): Promise<StudyCohort> {
-  const cohorts = getStoredItem<StudyCohort>("ffa_simulated_cohorts", getMockCohorts);
+  const cohorts = getStoredItem<StudyCohort>("fifi_simulated_cohorts", getMockCohorts);
   const newCohort: StudyCohort = {
     ...cohort,
     id: "c_" + Math.random().toString(36).substr(2, 9)
   };
   cohorts.push(newCohort);
-  saveStoredItem("ffa_simulated_cohorts", cohorts);
+  saveStoredItem("fifi_simulated_cohorts", cohorts);
   return newCohort;
 }
 
 // 4. Pvt Ltd Incorporations
 export async function getPvtLtdEntities(): Promise<PvtLtdEntity[]> {
-  return getStoredItem<PvtLtdEntity>("ffa_simulated_pvt_ltd", getMockPvtLtd);
+  return getStoredItem<PvtLtdEntity>("fifi_simulated_pvt_ltd", getMockPvtLtd);
 }
 
 export async function addPvtLtdEntity(entity: Omit<PvtLtdEntity, "id">): Promise<PvtLtdEntity> {
-  const entities = getStoredItem<PvtLtdEntity>("ffa_simulated_pvt_ltd", getMockPvtLtd);
+  const entities = getStoredItem<PvtLtdEntity>("fifi_simulated_pvt_ltd", getMockPvtLtd);
   const newEntity: PvtLtdEntity = {
     ...entity,
     id: "p_" + Math.random().toString(36).substr(2, 9)
   };
   entities.push(newEntity);
-  saveStoredItem("ffa_simulated_pvt_ltd", entities);
+  saveStoredItem("fifi_simulated_pvt_ltd", entities);
   return newEntity;
 }
 
 export async function updatePvtLtdStatus(id: string, status: PvtLtdEntity["status"], gst?: string): Promise<void> {
-  const entities = getStoredItem<PvtLtdEntity>("ffa_simulated_pvt_ltd", getMockPvtLtd);
+  const entities = getStoredItem<PvtLtdEntity>("fifi_simulated_pvt_ltd", getMockPvtLtd);
   const updated = entities.map(entity => {
     if (entity.id === id) {
       const u: Partial<PvtLtdEntity> = { status };
@@ -135,37 +135,37 @@ export async function updatePvtLtdStatus(id: string, status: PvtLtdEntity["statu
     }
     return entity;
   });
-  saveStoredItem("ffa_simulated_pvt_ltd", updated);
+  saveStoredItem("fifi_simulated_pvt_ltd", updated);
 }
 
 // 5. Tuition Fee & Masterclass Notifications
-export async function getNotifications(): Promise<FFANotification[]> {
-  return getStoredItem<FFANotification>("ffa_simulated_notifications", getMockNotifications);
+export async function getNotifications(): Promise<FIFINotification[]> {
+  return getStoredItem<FIFINotification>("fifi_simulated_notifications", getMockNotifications);
 }
 
-export async function sendNotification(notif: Omit<FFANotification, "id">): Promise<FFANotification> {
-  const notifications = getStoredItem<FFANotification>("ffa_simulated_notifications", getMockNotifications);
-  const newNotif: FFANotification = {
+export async function sendNotification(notif: Omit<FIFINotification, "id">): Promise<FIFINotification> {
+  const notifications = getStoredItem<FIFINotification>("fifi_simulated_notifications", getMockNotifications);
+  const newNotif: FIFINotification = {
     ...notif,
     id: "n_" + Math.random().toString(36).substr(2, 9)
   };
   notifications.unshift(newNotif);
-  saveStoredItem("ffa_simulated_notifications", notifications);
+  saveStoredItem("fifi_simulated_notifications", notifications);
   return newNotif;
 }
 
 // 6. Secure Student Accounts (Bypassed but kept for type compatibility)
-export async function registerUser(user: FFAUser): Promise<void> {
-  const users = getStoredItem<FFAUser>("ffa_simulated_users", () => []);
+export async function registerUser(user: FIFIUser): Promise<void> {
+  const users = getStoredItem<FIFIUser>("fifi_simulated_users", () => []);
   if (!users.some(u => u.email.toLowerCase() === user.email.toLowerCase())) {
     users.push(user);
-    saveStoredItem("ffa_simulated_users", users);
+    saveStoredItem("fifi_simulated_users", users);
   }
-  localStorage.setItem("ffa_logged_user", JSON.stringify(user));
+  localStorage.setItem("fifi_logged_user", JSON.stringify(user));
 }
 
-export async function getUser(email: string): Promise<FFAUser | null> {
-  const users = getStoredItem<FFAUser>("ffa_simulated_users", () => [
+export async function getUser(email: string): Promise<FIFIUser | null> {
+  const users = getStoredItem<FIFIUser>("fifi_simulated_users", () => [
     {
       id: "mock_admin_id",
       name: "Aarav Sharma",
@@ -178,19 +178,19 @@ export async function getUser(email: string): Promise<FFAUser | null> {
 }
 
 // 7. Activity Logs
-export async function getActivityLogs(): Promise<FFAActivityLog[]> {
-  return getStoredItem<FFAActivityLog>("ffa_simulated_activity_logs", getMockActivityLogs);
+export async function getActivityLogs(): Promise<FIFIActivityLog[]> {
+  return getStoredItem<FIFIActivityLog>("fifi_simulated_activity_logs", getMockActivityLogs);
 }
 
-export async function logActivity(action: Omit<FFAActivityLog, "id" | "createdAt">): Promise<FFAActivityLog> {
-  const logs = getStoredItem<FFAActivityLog>("ffa_simulated_activity_logs", getMockActivityLogs);
-  const newLog: FFAActivityLog = {
+export async function logActivity(action: Omit<FIFIActivityLog, "id" | "createdAt">): Promise<FIFIActivityLog> {
+  const logs = getStoredItem<FIFIActivityLog>("fifi_simulated_activity_logs", getMockActivityLogs);
+  const newLog: FIFIActivityLog = {
     ...action,
     id: "log_" + Math.random().toString(36).substr(2, 9),
     createdAt: new Date().toISOString()
   };
   logs.unshift(newLog);
-  saveStoredItem("ffa_simulated_activity_logs", logs);
+  saveStoredItem("fifi_simulated_activity_logs", logs);
   return newLog;
 }
 
@@ -296,7 +296,7 @@ function getMockPvtLtd(): PvtLtdEntity[] {
   ];
 }
 
-function getMockNotifications(): FFANotification[] {
+function getMockNotifications(): FIFINotification[] {
   return [
     {
       id: "n_1",
@@ -310,7 +310,7 @@ function getMockNotifications(): FFANotification[] {
   ];
 }
 
-function getMockActivityLogs(): FFAActivityLog[] {
+function getMockActivityLogs(): FIFIActivityLog[] {
   return [
     {
       id: "log_mock_1",

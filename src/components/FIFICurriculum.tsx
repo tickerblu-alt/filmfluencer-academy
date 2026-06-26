@@ -2,12 +2,12 @@ import React from "react";
 import { BookOpen, Calendar, Rocket, Target, Film, DollarSign, ArrowRight, ArrowUp } from "lucide-react";
 import { Course } from "../types";
 
-interface FFACurriculumProps {
+interface FIFICurriculumProps {
   courses: Course[];
   onNavigateToDashboard?: (initialTab?: string) => void;
 }
 
-export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumProps) {
+export default function FIFICurriculum({ onNavigateToDashboard }: FIFICurriculumProps) {
   return (
     <section id="curriculum" className="py-24 px-6 max-w-7xl mx-auto border-b border-neutral-900 bg-gradient-to-b from-[#0b0b0c] via-[#0d0d0f] to-[#0b0b0c] relative overflow-hidden">
       {/* Background radial highlight */}
@@ -18,25 +18,25 @@ export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumPr
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full mb-4">
           <BookOpen className="w-3.5 h-3.5 text-amber-400" />
           <span className="text-[10px] font-mono text-amber-300 uppercase tracking-widest font-bold">
-            THE FILMFLUENCERS ACADEMY (FFA)
+            THE FILMFLUENCERS ACADEMY (FIFI)
           </span>
         </div>
-
+ 
         <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-white tracking-tight leading-tight mb-4">
           Paying the Fee Isn’t Enough—You Have to Get Selected.<br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200 text-2xl sm:text-3xl md:text-4xl">
             The Path to Directing Your Own Hindi Films.
           </span>
         </h3>
-
+ 
         <p className="text-neutral-400 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed font-sans mt-4">
           Film schools will trap you in a classroom for years, teaching you how to hold a camera while you wait for a break that never comes. We don&apos;t do that.
         </p>
         <p className="text-neutral-300 max-w-3xl mx-auto text-base font-semibold leading-relaxed font-sans mt-4 bg-neutral-900/50 border border-neutral-800 p-4 rounded-xl">
-          At FFA, you aren&apos;t a student; you are a filmmaker and a founder. We teach you how to direct, how to manage a budget, and how to get your films in front of an audience. No silos, no waiting, no &quot;academic&quot; nonsense. Just pure execution.
+          At FIFI, you aren&apos;t a student; you are a filmmaker and a founder. We teach you how to direct, how to manage a budget, and how to get your films in front of an audience. No silos, no waiting, no &quot;academic&quot; nonsense. Just pure execution.
         </p>
       </div>
-
+ 
       {/* THE 12-MONTH PLAN CHRONOLOGICAL ROADMAP */}
       <div className="max-w-5xl mx-auto mb-16">
         <div className="text-center mb-8">
@@ -54,7 +54,7 @@ export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumPr
             </div>
             <p className="text-[11px] text-neutral-400 mt-2">Building Your Brand</p>
           </div>
-
+ 
           <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-850 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-mono text-amber-400 font-bold block mb-1">STAGE 02</span>
@@ -62,7 +62,7 @@ export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumPr
             </div>
             <p className="text-[11px] text-neutral-400 mt-2">Getting Ready to Shoot</p>
           </div>
-
+ 
           <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-850 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-mono text-amber-400 font-bold block mb-1">STAGE 03</span>
@@ -70,7 +70,7 @@ export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumPr
             </div>
             <p className="text-[11px] text-neutral-400 mt-2">Making Your 15 Episodes</p>
           </div>
-
+ 
           <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-850 flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-mono text-amber-400 font-bold block mb-1">STAGE 04</span>
@@ -80,7 +80,7 @@ export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumPr
           </div>
         </div>
       </div>
-
+ 
       {/* THE BREAKDOWN DETAIL CARDS */}
       <div className="max-w-5xl mx-auto space-y-8">
         <div className="flex items-center gap-2 border-b border-neutral-800 pb-3 mb-6">
@@ -89,7 +89,7 @@ export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumPr
             THE BREAKDOWN
           </h4>
         </div>
-
+ 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           
           {/* Q1 CARD */}
@@ -123,7 +123,7 @@ export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumPr
               </div>
             </div>
           </div>
-
+ 
           {/* Q2 CARD */}
           <div className="bg-[#121214] border border-neutral-800 rounded-2xl p-6 relative overflow-hidden group hover:border-amber-500/25 transition-all">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-amber-500/80" />
@@ -155,7 +155,7 @@ export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumPr
               </div>
             </div>
           </div>
-
+ 
           {/* Q3 CARD */}
           <div className="bg-[#121214] border border-neutral-800 rounded-2xl p-6 relative overflow-hidden group hover:border-amber-500/25 transition-all">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-amber-500/60" />
@@ -187,7 +187,7 @@ export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumPr
               </div>
             </div>
           </div>
-
+ 
           {/* Q4 CARD */}
           <div className="bg-[#121214] border border-neutral-800 rounded-2xl p-6 relative overflow-hidden group hover:border-amber-500/25 transition-all">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-amber-500/40" />
@@ -219,15 +219,15 @@ export default function FFACurriculum({ onNavigateToDashboard }: FFACurriculumPr
               </div>
             </div>
           </div>
-
+ 
         </div>
-
+ 
         {/* BOTTOM SUMMARY BLOCK */}
         <div className="mt-12 bg-neutral-900/40 border border-neutral-800 rounded-2xl p-6 text-center max-w-4xl mx-auto">
           <p className="text-sm text-neutral-200 leading-relaxed font-sans mb-6">
             <strong className="text-white">The bottom line:</strong> You aren&apos;t just learning to hold a camera. You&apos;re learning to own your career. One cohort. One year. <strong className="text-amber-400">Absolute industry leverage.</strong>
           </p>
-
+ 
           {/* Place 3: Cult Admissions Button decorated with elegance box and an arrow of hope above */}
           <div className="flex flex-col items-center gap-2.5">
             <div className="flex flex-col items-center animate-bounce duration-[2500ms]">

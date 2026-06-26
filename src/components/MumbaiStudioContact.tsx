@@ -38,10 +38,10 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
 
   // States for custom main stage and suite images
   const [customCameraImg, setCustomCameraImg] = useState<string>(() => {
-    return localStorage.getItem("ffa_custom_camera_img") || cameraImg;
+    return localStorage.getItem("fifi_custom_camera_img") || cameraImg;
   });
   const [customSuiteImg, setCustomSuiteImg] = useState<string>(() => {
-    return localStorage.getItem("ffa_custom_suite_img") || suiteImg;
+    return localStorage.getItem("fifi_custom_suite_img") || suiteImg;
   });
 
   const handleCameraImgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +51,7 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
     reader.onload = () => {
       const dataUrl = reader.result as string;
       setCustomCameraImg(dataUrl);
-      localStorage.setItem("ffa_custom_camera_img", dataUrl);
+      localStorage.setItem("fifi_custom_camera_img", dataUrl);
     };
     reader.readAsDataURL(file);
   };
@@ -63,24 +63,24 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
     reader.onload = () => {
       const dataUrl = reader.result as string;
       setCustomSuiteImg(dataUrl);
-      localStorage.setItem("ffa_custom_suite_img", dataUrl);
+      localStorage.setItem("fifi_custom_suite_img", dataUrl);
     };
     reader.readAsDataURL(file);
   };
 
   const handleCameraImgReset = () => {
     setCustomCameraImg(cameraImg);
-    localStorage.removeItem("ffa_custom_camera_img");
+    localStorage.removeItem("fifi_custom_camera_img");
   };
 
   const handleSuiteImgReset = () => {
     setCustomSuiteImg(suiteImg);
-    localStorage.removeItem("ffa_custom_suite_img");
+    localStorage.removeItem("fifi_custom_suite_img");
   };
 
   // Load custom uploaded images from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("ffa_custom_studio_images");
+    const saved = localStorage.getItem("fifi_custom_studio_images");
     if (saved) {
       try {
         setStudioImages(JSON.parse(saved));
@@ -92,7 +92,7 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
 
   const saveImages = (images: CustomStudioImage[]) => {
     setStudioImages(images);
-    localStorage.setItem("ffa_custom_studio_images", JSON.stringify(images));
+    localStorage.setItem("fifi_custom_studio_images", JSON.stringify(images));
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,7 +183,7 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
         
         {/* Card 1: Camera Stage & Rigging */}
         <div className="relative group bg-neutral-950 border border-neutral-900 rounded-3xl overflow-hidden shadow-2xl flex flex-col justify-between">
-          <div className="relative aspect-video w-full overflow-hidden">
+          <div className="relative aspect-[4/3] xs:aspect-video w-full overflow-hidden">
             {/* Visual Red Overlay Glow */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 z-10" />
             <img 
@@ -243,7 +243,7 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
 
         {/* Card 2: Post Editing Studio */}
         <div className="relative group bg-neutral-950 border border-neutral-900 rounded-3xl overflow-hidden shadow-2xl flex flex-col justify-between">
-          <div className="relative aspect-video w-full overflow-hidden">
+          <div className="relative aspect-[4/3] xs:aspect-video w-full overflow-hidden">
             {/* Visual Amber/Red overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 z-10" />
             <img 
@@ -367,7 +367,7 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
                 key={img.id}
                 className="group relative bg-neutral-900 border border-neutral-850 rounded-2xl overflow-hidden shadow-md flex flex-col justify-between"
               >
-                <div className="relative aspect-video w-full overflow-hidden bg-neutral-950">
+                <div className="relative aspect-[4/3] xs:aspect-video w-full overflow-hidden bg-neutral-950">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 z-10" />
                   <img 
                     src={img.url} 
@@ -478,15 +478,14 @@ export default function MumbaiStudioContact({ onNavigateToDashboard }: MumbaiStu
             </div>
           </div>
 
-          <button
-            onClick={() => {
-              const el = document.getElementById("enroll");
-              if (el) el.scrollIntoView({ behavior: "smooth" });
-            }}
-            className="w-full mt-8 py-3.5 rounded-xl bg-red-600 hover:bg-red-505 text-white font-semibold text-xs uppercase tracking-wider font-mono hover:scale-[1.01] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-red-600/10"
+          <a
+            href="https://wa.me/919004221717?text=Hi!%20I%20want%20to%20schedule%20a%20physical%20studio%20tour%20at%20Andheri%20West%20for%20the%20upcoming%20batch."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full mt-8 py-3.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-xs uppercase tracking-wider font-mono hover:scale-[1.01] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-red-600/10 text-center"
           >
             Schedule Physical Studio Tour &rarr;
-          </button>
+          </a>
         </div>
 
       </div>

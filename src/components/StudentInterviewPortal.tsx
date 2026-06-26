@@ -119,7 +119,7 @@ export default function StudentInterviewPortal({ onAddEnquiry }: StudentIntervie
         tier: mockTier,
         critique: `CRITIQUE: Exceptional spatial awareness and directorial control. Your night lighting solution shows active understanding of practical sources and cinematic contrast. Your response to the actor dispute demonstrates firm set management while keeping creative channels open. Your screen narrative opens with rich, cinematic visual metaphors. Highly recommended for immediate enrollment in the upcoming physical cohort.`,
         recommendation: `Admitted with High Merit Scholarship options up to ₹15,000 for standard seat bookings.`,
-        admissionId: "FFA-ADM-" + Math.random().toString(36).substr(2, 9).toUpperCase()
+        admissionId: "FIFI-ADM-" + Math.random().toString(36).substr(2, 9).toUpperCase()
       };
 
       setEvaluation(mockResult);
@@ -152,7 +152,7 @@ Evaluation Tier: ${evaluation.tier}
 Admissions Code: ${evaluation.admissionId}
 
 CONGRATULATIONS! You have successfully broken the traditional selection filter.
-Your artistic capacity critique has been verified by the FFA Directorate.
+Your artistic capacity critique has been verified by the FIFI Directorate.
 Please present this certificate at the Andheri office to secure your ₹20,000 seat booking.
     `;
     navigator.clipboard.writeText(text);

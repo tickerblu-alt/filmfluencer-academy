@@ -29,50 +29,55 @@ interface CreativeAsset {
 export default function TheCreativeEngine() {
   const [activeAssetId, setActiveAssetId] = useState<string>("directors-showreel");
   const [playVideoId, setPlayVideoId] = useState<string | null>(null);
+  const [inlinePlaying, setInlinePlaying] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    setInlinePlaying(false);
+  }, [activeAssetId]);
 
   const assets: CreativeAsset[] = [
     {
       id: "directors-showreel",
-      title: "Director's Showreel",
+      title: "BTS OF LAWS OF ATTRACTION",
       badge: "Certified Master",
       tags: ["Core Showreel", "Main Reel", "Supervised by Hemant Nilim Das"],
-      quote: "Cinematic execution, staging blocks, and industry-grade framing",
-      description: "Watch the premium creative layout, camera setups, and advanced storytelling techniques configured for active Bollywood theatrical distribution.",
+      quote: "WATCH & UNDERSTAND HOW actors are guided to work, how studio based filmmaking happen!",
+      description: "WATCH & UNDERSTAND HOW actors are guided to work, how studio based filmmaking happen!",
       cast: "Cast: Star Cast & Indian Academy Ensemble",
-      youtubeId: "vBq72eF_u1A", // Pocket Gangsters trailer
+      youtubeId: "7OaFionMvFg",
       icon: <Film className="w-5 h-5 text-amber-500" />
     },
     {
       id: "onset-execution",
-      title: "On-Set Execution",
+      title: "BTS OF JHOOTHISTAAN",
       badge: "IP Blueprint",
       tags: ["Live Action Lab", "BTS Masterclass", "Director Live Techniques"],
       quote: "Handling dynamic camera movements, visual blocking, and high-tension scenes",
-      description: "Behind-the-scenes masterclass walkthrough. Get instant blueprints on handling complex high-budget action and psychological suspense sets.",
+      description: "Directorial Process: Guiding the Cast\nA technical look at how creator and director Hemant Nilim Das pulls raw, grounded performances from the cast, particularly lead Kainaat Arora.\n\nEmotional Mapping: Witness the on-set discussions between the director and the actors before rolling. The footage highlights how internal character motivations are translated into physical blocking and eye lines.\n\nPacing and Restraint: See the real-time adjustments made between takes to dial back melodrama in favor of gritty, high-stakes realism—ensuring the panic of a hunted journalist feels authentic to the lens.",
       cast: "Cast: A-list Bollywood talent attachments coached via the Das methodology",
-      youtubeId: "vBq72eF_u1A", // High tension set work walkthrough
+      youtubeId: "PnxCT8XABGc",
       icon: <Camera className="w-5 h-5 text-amber-400" />
     },
     {
       id: "bulletproof-badmash",
-      title: "Bulletproof Badmash",
+      title: "BTS OF POCKET GANGSTERS",
       badge: "Active Pitch",
       tags: ["Concept Pilot Film", "Noir Showcase", "Screenplay & Director"],
-      quote: "Gritty Neo-Noir Concept & Visual Package",
-      description: "An official flagship showcase designed under the Filmfluencer Academy banner. Pushing stylistic neo-noir boundaries with extreme high-concept continuous takes.",
-      cast: "Cast: Indian Indie Theater group actors under Muvireel copyright",
-      youtubeId: "vBq72eF_u1A", // Gritty continuous take
+      quote: "Gritty Single Cut internationally Acclaimed Neo-Noir Concept & Visual Package",
+      description: "What happens when you try to shoot a 110-minute feature film in a single, uncut take? Chaos, freezing temperatures, and pure cinematic adrenaline. Welcome to the uncut making of Pocket Gangsters—India's first one-take, one-shot feature film.",
+      cast: "Madhur Mittal, Vijay Raaz, Raghubir Yadav",
+      youtubeId: "rRbyfnlUJUM",
       icon: <Compass className="w-5 h-5 text-emerald-400" />
     },
     {
       id: "girlfriend-club",
-      title: "Girlfriend Club",
+      title: "PSYCHO CHANDRAMUKHI PREVIEW SCREENING",
       badge: "Ready to Option",
       tags: ["Modern Commercial Showcase", "Romantic Drama IP", "Screenplay & Writer"],
-      quote: "Commercial Modern Narrative Packaging",
-      description: "A masterful dive into commercial romantic comedy aesthetics and digital-first premium screenplays designed to capture gen-Z audience demographics and high-value B2B sponsors.",
+      quote: "Commercial Release & Branding Buzz",
+      description: "A masterful dive into commercial release of a film and building viable branding buzz. Watch the film in Airtel Tv, Hungama and in Many more platforms.",
       cast: "Cast: Top national digital creators and high-value legal talent attachments",
-      youtubeId: "vBq72eF_u1A", // Girlfriend Club modern commercial teaser
+      youtubeId: "MCRcsVZ0nFg",
       icon: <Tv className="w-5 h-5 text-blue-400" />
     }
   ];
@@ -107,7 +112,7 @@ export default function TheCreativeEngine() {
               </div>
               
               <p className="text-neutral-300 text-base sm:text-lg font-serif italic leading-relaxed text-transparent bg-clip-text bg-gradient-to-r from-neutral-100 via-neutral-200 to-neutral-400 mt-2">
-                LA World International Film Festival Best Director, author of Secular Psycho, and pioneer of uncut hostage action scripts (Pocket Gangsters). Look inside the cinematic blueprints that fuel the Filmfluencer curriculum.
+                LA World International Film Festival Best Director, author of Secular Psycho, and pioneer of uncut hostage action scripts (BTS OF POCKET GANGSTERS). Look inside the cinematic blueprints that fuel the Filmfluencer curriculum.
               </p>
             </div>
 
@@ -228,28 +233,40 @@ export default function TheCreativeEngine() {
                   </div>
 
                   {/* Core asset image mock block with PLAY trigger */}
-                  <div className="relative aspect-video bg-neutral-950 flex flex-col items-center justify-center p-8 text-center border-b border-neutral-900 overflow-hidden group/screen">
-                    <div className="absolute inset-0 bg-[#000] opacity-40 z-10 transition-opacity group-hover/screen:opacity-50" />
-                    
-                    {/* Simulated visual film slate texture background */}
-                    <div className="absolute inset-0 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:20px_20px] opacity-[0.03] z-0" />
-                    
-                    {/* Large showreel branding overlay */}
-                    <div className="relative z-20 space-y-3 p-4">
-                      <div className="mx-auto w-16 h-16 rounded-full bg-amber-500 text-black flex items-center justify-center cursor-pointer shadow-lg hover:scale-105 hover:bg-amber-400 transition-all shadow-amber-500/15"
-                        onClick={() => setPlayVideoId(activeAsset.youtubeId)}
-                      >
-                        <Play className="w-7 h-7 fill-current ml-1" />
-                      </div>
-                      <p className="text-[11px] font-mono text-amber-400 uppercase font-black tracking-widest">
-                        CLICK TO PLAY OFFICIAL BluePrint PREVIEW
-                      </p>
-                    </div>
+                  <div className="relative aspect-video bg-neutral-950 border-b border-neutral-900 overflow-hidden group/screen">
+                    {inlinePlaying ? (
+                      <iframe
+                        className="absolute inset-0 w-full h-full"
+                        src={`https://www.youtube.com/embed/${activeAsset.youtubeId}?autoplay=1&rel=0`}
+                        title={activeAsset.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+                        <div className="absolute inset-0 bg-[#000] opacity-40 z-10 transition-opacity group-hover/screen:opacity-50" />
+                        
+                        {/* Simulated visual film slate texture background */}
+                        <div className="absolute inset-0 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:20px_20px] opacity-[0.03] z-0" />
+                        
+                        {/* Large showreel branding overlay */}
+                        <div className="relative z-20 space-y-3 p-4">
+                          <div className="mx-auto w-16 h-16 rounded-full bg-amber-500 text-black flex items-center justify-center cursor-pointer shadow-lg hover:scale-105 hover:bg-amber-400 transition-all shadow-amber-500/15"
+                            onClick={() => setInlinePlaying(true)}
+                          >
+                            <Play className="w-7 h-7 fill-current ml-1" />
+                          </div>
+                          <p className="text-[11px] font-mono text-amber-400 uppercase font-black tracking-widest">
+                            CLICK TO PLAY OFFICIAL BluePrint PREVIEW
+                          </p>
+                        </div>
 
-                    {/* Movie info tag card bottom right */}
-                    <div className="absolute bottom-3 right-3 z-20 bg-neutral-900/90 border border-neutral-800 px-3 py-1.5 rounded-lg text-[9px] font-mono text-neutral-400">
-                      <span>FPS: 31.6 • RESOLUTION: 4K PRORES</span>
-                    </div>
+                        {/* Movie info tag card bottom right */}
+                        <div className="absolute bottom-3 right-3 z-20 bg-neutral-900/90 border border-neutral-800 px-3 py-1.5 rounded-lg text-[9px] font-mono text-neutral-400">
+                          <span>FPS: 31.6 • RESOLUTION: 4K PRORES</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Narrative details block */}
@@ -264,7 +281,7 @@ export default function TheCreativeEngine() {
                         </span>
                       </div>
 
-                      <p className="text-sm text-neutral-200 leading-relaxed font-sans font-light">
+                      <p className="text-sm text-neutral-200 leading-relaxed font-sans font-light whitespace-pre-line">
                         {activeAsset.description}
                       </p>
                     </div>
@@ -278,7 +295,7 @@ export default function TheCreativeEngine() {
                       </div>
 
                       <button
-                        onClick={() => setPlayVideoId(activeAsset.youtubeId)}
+                        onClick={() => setInlinePlaying(true)}
                         className="py-3 px-5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs uppercase tracking-wider font-sans hover:scale-[1.02] transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer self-start sm:self-auto shrink-0"
                       >
                         PLAY ASSET &rarr;

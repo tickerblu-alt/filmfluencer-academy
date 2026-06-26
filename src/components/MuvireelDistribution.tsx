@@ -18,7 +18,7 @@ export default function MuvireelDistribution() {
   const tapes: ScreeningTape[] = [
     {
       id: "varanasi_neon",
-      title: "Varanasi Neon",
+      title: "JHOOTHISTAAN PROMO",
       director: "Kabir Mehta",
       duration: "4m 12s",
       description: "An exploration of ancient mystical spiritual ghats under modern ultraviolet lights and hyper-stylized frame rates.",
@@ -30,7 +30,7 @@ export default function MuvireelDistribution() {
     },
     {
       id: "the_auto_driver",
-      title: "The Auto Driver",
+      title: "PSYCHO CHANDRAMUKHI TRAILER",
       director: "Priya Rao",
       duration: "5m 45s",
       description: "A fast-paced psychological profile of a night driver maneuvering the high-contrast underbelly of modern Mumbai.",
@@ -42,7 +42,7 @@ export default function MuvireelDistribution() {
     },
     {
       id: "bengaluru_cyberpunk",
-      title: "Bengaluru Cyberpunk",
+      title: "LAW OF ATTRACTION TRAILER",
       director: "Rohit Krish",
       duration: "3m 30s",
       description: "Atmospheric, hyper-saturated neon frames capturing late night tech workers seeking human connection.",
@@ -50,11 +50,11 @@ export default function MuvireelDistribution() {
       views: "3.1M",
       likes: "590K",
       bitrate: "256kbps",
-      imageUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&q=80&w=400&h=600"
+      imageUrl: ""
     },
     {
       id: "himalayan_breath",
-      title: "Himalayan Breath",
+      title: "SHAKTIPARI MUSIC VIDEO",
       director: "Ananya Dev",
       duration: "6m 10s",
       description: "An evocative cinematic diary documenting breathing rituals at high altitudinal monasteries under golden hours.",
@@ -62,14 +62,50 @@ export default function MuvireelDistribution() {
       views: "1.2M",
       likes: "240K",
       bitrate: "320kbps",
-      imageUrl: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=400&h=600"
+      imageUrl: ""
     }
   ];
 
+  const [customYoutubeIds, setCustomYoutubeIds] = useState<Record<string, string>>(() => {
+    const defaults = {
+      varanasi_neon: "x57JXMTYy5I",
+      the_auto_driver: "3CedR4zg_wg",
+      bengaluru_cyberpunk: "J-HNX0wUncM",
+      himalayan_breath: "l_6r7nNyypI"
+    };
+    try {
+      const saved = localStorage.getItem("fifi_muvireel_youtube_ids");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // If they have old placeholders, migrate them to the new requested IDs
+        const migrated = { ...defaults, ...parsed };
+        if (parsed.varanasi_neon === "7OaFionMvFg") migrated.varanasi_neon = defaults.varanasi_neon;
+        if (parsed.the_auto_driver === "PnxCT8XABGc") migrated.the_auto_driver = defaults.the_auto_driver;
+        if (parsed.bengaluru_cyberpunk === "rRbyfnlUJUM") migrated.bengaluru_cyberpunk = defaults.bengaluru_cyberpunk;
+        if (parsed.himalayan_breath === "MCRcsVZ0nFg") migrated.himalayan_breath = defaults.himalayan_breath;
+        return migrated;
+      }
+    } catch (e) {}
+    return defaults;
+  });
+
+  const extractYoutubeId = (input: string): string => {
+    if (!input) return "";
+    const trimmed = input.trim();
+    if (trimmed.length === 11 && !trimmed.includes("/") && !trimmed.includes("?")) {
+      return trimmed;
+    }
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = trimmed.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : trimmed;
+  };
+
   const [activeTapeIdx, setActiveTapeIdx] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
   const currentTape = tapes[activeTapeIdx];
 
   const handleNextTape = () => {
+    setIsPlaying(false);
     setActiveTapeIdx((prev) => (prev + 1) % tapes.length);
   };
 
@@ -140,7 +176,7 @@ export default function MuvireelDistribution() {
 
           <div className="p-5 bg-gradient-to-r from-red-950/20 to-amber-950/15 border border-red-500/20 rounded-2xl">
             <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans">
-              <strong>MUVIREEL Beta v1.4</strong> is exclusive to FFA Students. Our upcoming premium cohort gets direct authorization keys to publish up to three original productions with instant monetized ticketing active.
+              <strong>MUVIREEL Beta v1.4</strong> is exclusive to FIFI Students. Our upcoming premium cohort gets direct authorization keys to publish up to three original productions with instant monetized ticketing active.
             </p>
           </div>
         </div>
@@ -150,111 +186,141 @@ export default function MuvireelDistribution() {
         <div className="lg:col-span-5 flex flex-col items-center">
           
           {/* Phone Shell frame */}
-          <div className="w-[320px] h-[580px] rounded-[40px] bg-[#0c0c0d] border-[8px] border-neutral-800 shadow-2xl relative overflow-hidden flex flex-col justify-between">
+          <div className="w-full max-w-[290px] xs:max-w-[320px] h-[520px] xs:h-[580px] rounded-[36px] xs:rounded-[40px] bg-[#0c0c0d] border-[6px] xs:border-[8px] border-neutral-800 shadow-2xl relative overflow-hidden flex flex-col justify-between shrink-0">
             
             {/* Camera notch */}
-            <div className="absolute top-2 left-1/2 -translate-x-1/2 w-32 h-4 bg-black rounded-full z-30 flex items-center justify-center">
-              <span className="w-2.5 h-2.5 rounded-full bg-neutral-900 border border-neutral-800 mr-2" />
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 w-28 xs:w-32 h-3.5 xs:h-4 bg-black rounded-full z-30 flex items-center justify-center">
+              <span className="w-2 h-2 rounded-full bg-neutral-900 border border-neutral-800 mr-2" />
               <span className="w-1.5 h-1.5 rounded-full bg-blue-900" />
             </div>
 
-            {/* Custom active screen content */}
-            <div className="absolute inset-0 z-10 overflow-hidden flex flex-col justify-between p-5 pt-8 bg-gradient-to-b from-black/80 via-black/40 to-black/90">
-              
-              {/* Dynamic visual overlay background simulating the movie frame */}
-              <div 
-                className="absolute inset-0 -z-10 bg-cover bg-center transition-all duration-700 opacity-60"
-                style={{ backgroundImage: `url(${currentTape.imageUrl})` }}
-              />
-              
-              {/* Stream Type indicator top */}
-              <div className="flex justify-between items-center text-white">
-                <span className="text-[9px] font-mono font-bold uppercase px-2.5 py-1 rounded-full bg-red-600 border border-red-500/40 tracking-wider">
-                  MUVIREELBETA
-                </span>
-                <span className="text-[10px] font-mono text-neutral-300 bg-black/60 px-2 py-0.5 rounded flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Stream: Ultra
-                </span>
+            {isPlaying ? (
+              /* Real video playing view inside phone mock */
+              <div className="absolute inset-0 z-20 bg-black flex flex-col justify-between">
+                {/* Header bar */}
+                <div className="p-3 bg-black/90 flex justify-between items-center border-b border-neutral-900 pt-7 xs:pt-8">
+                  <span className="text-[9px] font-mono font-bold text-amber-400 tracking-wider uppercase truncate max-w-[150px]">
+                    📺 PLAYING: {currentTape.title}
+                  </span>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsPlaying(false);
+                    }}
+                    className="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white transition-colors cursor-pointer text-[10px] font-mono"
+                  >
+                    Close
+                  </button>
+                </div>
+                {/* Player */}
+                <div className="relative flex-grow bg-black">
+                  <iframe
+                    className="absolute inset-0 w-full h-full"
+                    src={`https://www.youtube.com/embed/${customYoutubeIds[currentTape.id] || "x57JXMTYy5I"}?autoplay=1&rel=0&controls=1&modestbranding=1`}
+                    title={currentTape.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
               </div>
-
-              {/* Middle Play Button simulation */}
-              <div className="my-auto flex flex-col items-center justify-center">
-                <button 
-                  onClick={handleNextTape}
-                  className="w-14 h-14 rounded-full bg-white/15 backdrop-blur-md border border-white/30 text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-lg group-hover:bg-white/20"
-                >
-                  <Play className="w-6 h-6 fill-current text-white translate-x-0.5" />
-                </button>
-                <span className="text-[10px] font-mono text-white/80 uppercase tracking-widest mt-3 bg-black/40 px-3 py-1 rounded-full border border-white/10">
-                  Tap to Play
-                </span>
-              </div>
-
-              {/* Bottom Stream Details Overlay */}
-              <div className="space-y-3.5 bg-black/70 p-4 rounded-2xl border border-neutral-800/60 backdrop-blur-sm">
-                <div>
-                  <span className="text-[8px] font-mono tracking-widest text-red-400 uppercase font-bold block mb-0.5">
-                    Cinematic Docu-Fiction
+            ) : (
+              /* Custom active screen content with preview */
+              <div className="absolute inset-0 z-10 overflow-hidden flex flex-col justify-between p-4 xs:p-5 pt-8 xs:pt-10 bg-gradient-to-b from-black/80 via-black/40 to-black/90">
+                
+                {/* Dynamic visual overlay background simulating the movie frame */}
+                <div 
+                  className="absolute inset-0 -z-10 bg-cover bg-center transition-all duration-700 opacity-60"
+                  style={{ backgroundImage: `url(${currentTape.imageUrl})` }}
+                />
+                
+                {/* Stream Type indicator top */}
+                <div className="flex justify-between items-center text-white">
+                  <span className="text-[8px] xs:text-[9px] font-mono font-bold uppercase px-2 xs:px-2.5 py-0.5 xs:py-1 rounded-full bg-red-600 border border-red-500/40 tracking-wider">
+                    MUVIREELBETA
                   </span>
-                  <div className="flex justify-between items-baseline">
-                    <h4 className="text-base font-extrabold text-white leading-tight font-display">
-                      {currentTape.title}
-                    </h4>
-                    <span className="text-[10px] font-mono text-neutral-400 shrink-0">
-                      {currentTape.duration}
-                    </span>
-                  </div>
-                </div>
-
-                <p className="text-[11px] text-neutral-300 font-sans leading-relaxed line-clamp-2">
-                  {currentTape.description}
-                </p>
-
-                {/* Technical camera badges */}
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {currentTape.tags.map((tag, idx) => (
-                    <span key={idx} className="px-2 py-0.5 bg-neutral-900/80 text-[9px] font-mono text-amber-400 rounded border border-neutral-800">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Stats indicators */}
-                <div className="flex items-center justify-between border-t border-neutral-900 pt-2 text-[10px] font-mono text-neutral-400">
-                  <span className="flex items-center gap-1">
-                    <Eye className="w-3.5 h-3.5 text-neutral-500" /> {currentTape.views} views
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Heart className="w-3.5 h-3.5 text-red-500" /> {currentTape.likes} likes
-                  </span>
-                  <span className="flex items-center gap-1 text-[9px] text-neutral-500">
-                    <Volume2 className="w-3 h-3" /> {currentTape.bitrate}
+                  <span className="text-[9px] xs:text-[10px] font-mono text-neutral-300 bg-black/60 px-2 py-0.5 rounded flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Stream: Ultra
                   </span>
                 </div>
 
-                {/* Director Badge */}
-                <div className="border-t border-neutral-900 pt-2 flex items-center justify-between">
+                {/* Middle Play Button simulation */}
+                <div className="my-auto flex flex-col items-center justify-center">
+                  <button 
+                    onClick={() => setIsPlaying(true)}
+                    className="w-12 h-12 xs:w-14 xs:h-14 rounded-full bg-white/15 backdrop-blur-md border border-white/30 text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-lg hover:bg-white/20"
+                  >
+                    <Play className="w-5 h-5 xs:w-6 xs:h-6 fill-current text-white translate-x-0.5" />
+                  </button>
+                  <span className="text-[9px] xs:text-[10px] font-mono text-white/80 uppercase tracking-widest mt-2 xs:mt-3 bg-black/40 px-2.5 py-0.5 xs:py-1 rounded-full border border-white/10">
+                    Tap to Play
+                  </span>
+                </div>
+
+                {/* Bottom Stream Details Overlay */}
+                <div className="space-y-2.5 xs:space-y-3.5 bg-black/70 p-3 xs:p-4 rounded-xl xs:rounded-2xl border border-neutral-800/60 backdrop-blur-sm">
                   <div>
-                    <p className="text-[9px] text-neutral-500 font-mono uppercase">Director / Creator</p>
-                    <p className="text-xs font-bold text-white">{currentTape.director}</p>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-[9px] font-mono uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-bold">
-                      FFA Fellow
+                    <span className="text-[7px] xs:text-[8px] font-mono tracking-widest text-red-400 uppercase font-bold block mb-0.5">
+                      Cinematic Docu-Fiction
                     </span>
-                    <span className="text-[8px] font-mono text-emerald-400 block mt-0.5">Live Tip Active</span>
+                    <div className="flex justify-between items-baseline">
+                      <h4 className="text-sm xs:text-base font-extrabold text-white leading-tight font-display">
+                        {currentTape.title}
+                      </h4>
+                      <span className="text-[9px] xs:text-[10px] font-mono text-neutral-400 shrink-0">
+                        {currentTape.duration}
+                      </span>
+                    </div>
                   </div>
+
+                  <p className="text-[10px] xs:text-[11px] text-neutral-300 font-sans leading-relaxed line-clamp-2">
+                    {currentTape.description}
+                  </p>
+
+                  {/* Technical camera badges */}
+                  <div className="flex flex-wrap gap-1 pt-0.5">
+                    {currentTape.tags.map((tag, idx) => (
+                      <span key={idx} className="px-1.5 py-0.5 bg-neutral-900/80 text-[8px] xs:text-[9px] font-mono text-amber-400 rounded border border-neutral-800">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Stats indicators */}
+                  <div className="flex items-center justify-between border-t border-neutral-900 pt-1.5 text-[9px] xs:text-[10px] font-mono text-neutral-400">
+                    <span className="flex items-center gap-1">
+                      <Eye className="w-3 h-3 text-neutral-500" /> {currentTape.views} views
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Heart className="w-3 h-3 text-red-500" /> {currentTape.likes} likes
+                    </span>
+                    <span className="flex items-center gap-1 text-[8px] text-neutral-500">
+                      <Volume2 className="w-2.5 h-2.5" /> {currentTape.bitrate}
+                    </span>
+                  </div>
+
+                  {/* Director Badge */}
+                  <div className="border-t border-neutral-900 pt-1.5 flex items-center justify-between">
+                    <div>
+                      <p className="text-[8px] text-neutral-500 font-mono uppercase">Director / Creator</p>
+                      <p className="text-[10px] xs:text-xs font-bold text-white">{currentTape.director}</p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[8px] xs:text-[9px] font-mono uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1 py-0.5 rounded font-bold">
+                        FIFI Fellow
+                      </span>
+                    </div>
+                  </div>
+
                 </div>
 
               </div>
-
-            </div>
+            )}
 
           </div>
 
           {/* Selector swipe instructions and tapes tabs */}
-          <div className="mt-6 w-[320px] text-center space-y-3">
+          <div className="mt-6 w-full max-w-[290px] xs:max-w-[320px] text-center space-y-3">
             <button 
               onClick={handleNextTape}
               className="w-full py-2.5 px-4 bg-neutral-900 border border-neutral-800 hover:border-red-500/30 rounded-xl text-xs font-mono text-neutral-300 flex items-center justify-center gap-2 transition-all cursor-pointer hover:text-white"
@@ -270,7 +336,10 @@ export default function MuvireelDistribution() {
               {tapes.map((tape, idx) => (
                 <button
                   key={tape.id}
-                  onClick={() => setActiveTapeIdx(idx)}
+                  onClick={() => {
+                    setIsPlaying(false);
+                    setActiveTapeIdx(idx);
+                  }}
                   className={`w-2.5 h-2.5 rounded-full transition-all ${
                     activeTapeIdx === idx ? "bg-red-500 scale-110" : "bg-neutral-800"
                   }`}
@@ -282,6 +351,43 @@ export default function MuvireelDistribution() {
             <div className="text-[10px] font-mono text-neutral-500">
               Active tape: <span className="text-neutral-300">{currentTape.title}</span> by {currentTape.director}
             </div>
+
+            {/* YouTube Link Customizer Console */}
+            <div className="mt-6 p-4 bg-[#0d0d0f] border border-neutral-900 rounded-2xl w-full text-left space-y-3.5 shadow-xl">
+              <div className="flex items-center gap-2 border-b border-neutral-900 pb-2">
+                <Radio className="w-3.5 h-3.5 text-red-500 animate-pulse" />
+                <h5 className="text-[10px] font-mono font-bold text-neutral-300 uppercase tracking-widest">
+                  Upload Your Video Links
+                </h5>
+              </div>
+              <p className="text-[9px] text-neutral-500 leading-normal font-sans">
+                Paste any YouTube URL or Video ID below. It will automatically update the play button in the interactive phone above!
+              </p>
+              <div className="space-y-2.5">
+                {tapes.map((tape) => (
+                  <div key={tape.id} className="space-y-1">
+                    <label className="text-[8px] font-mono text-neutral-400 font-bold uppercase block flex justify-between">
+                      <span>🎥 {tape.title}</span>
+                      {currentTape.id === tape.id && <span className="text-red-400 font-bold animate-pulse">● Selected</span>}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Paste YouTube Link or ID..."
+                      value={customYoutubeIds[tape.id] || ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        const parsedId = extractYoutubeId(value);
+                        const updated = { ...customYoutubeIds, [tape.id]: parsedId };
+                        setCustomYoutubeIds(updated);
+                        localStorage.setItem("fifi_muvireel_youtube_ids", JSON.stringify(updated));
+                      }}
+                      className="w-full text-[11px] bg-black border border-neutral-850 focus:border-red-500/50 rounded-lg p-2 font-mono text-neutral-300 placeholder-neutral-700 outline-none transition-colors"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
           </div>
 
         </div>
